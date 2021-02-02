@@ -34,16 +34,13 @@ public class PaymentService {
         this.restTemplate = restTemplate;
     }
 
-    public void registerOrder(PaymentDetailsModel paymentDetailsModel) throws ShoppingCartException {
+    public void registerOrder(PaymentDetailsModel paymentDetailsModel) {
         String userName = paymentDetailsModel.getUserName();
         String paymentStatus = paymentDetailsModel.getPaymentStatus();
 
-        User user = userService.getUserByUsername(userName).orElse(null);
+        User user = userService.getUserByUsername(userName);
         ShoppingCart shoppingCart = shoppingCartService.getCartByUser(user);
 
-        if (shoppingCart == null) {
-            throw new ShoppingCartException();
-        }
         double total = mealsToCartService.getTotalPrice(shoppingCart);
 
         UserOrder userOrder = new UserOrder(paymentStatus,total, user);

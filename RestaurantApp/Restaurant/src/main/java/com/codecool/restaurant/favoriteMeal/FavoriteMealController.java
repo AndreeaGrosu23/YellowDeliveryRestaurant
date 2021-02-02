@@ -23,7 +23,7 @@ public class FavoriteMealController {
     // to refactor to favorite DTO
     @PutMapping(path = "{username}/favorites/{idMeal}")
     public void addMealToFavorites(@PathVariable("username") String username, @RequestBody HashMap<String, String> listMealAttributes){
-        User user = userService.getUserByUsername(username).orElse(null);
+        User user = userService.getUserByUsername(username);
         String idMeal = listMealAttributes.get("idMeal");
         String name = listMealAttributes.get("strMeal");
         String image = listMealAttributes.get("strMealThumb");
@@ -33,13 +33,13 @@ public class FavoriteMealController {
 
     @GetMapping(path = "{username}/favorites")
     public List<FavoriteMeal> getFavorites(@PathVariable("username") String username) {
-        User user = userService.getUserByUsername(username).orElse(null);
+        User user = userService.getUserByUsername(username);
         return favoriteMealService.getAllFavoriteMeals(user.getId());
     }
 
     @DeleteMapping(path = "{username}/favorites/delete/{idMeal}")
     public void deleteFavoriteByIdMeal(@PathVariable("username") String username, @PathVariable("idMeal") String idMeal) {
-        User user = userService.getUserByUsername(username).orElse(null);
+        User user = userService.getUserByUsername(username);
         List<FavoriteMeal> favoriteMeals = favoriteMealService.getAllFavoriteMeals(user.getId());
         for (FavoriteMeal favoriteMeal : favoriteMeals) {
             if (favoriteMeal.getIdMeal().equals(idMeal)) {

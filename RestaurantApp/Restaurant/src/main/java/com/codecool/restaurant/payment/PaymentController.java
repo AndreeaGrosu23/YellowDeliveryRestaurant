@@ -23,14 +23,10 @@ public class PaymentController {
     }
 
     @PostMapping
-    public String getPaymentDetails(@Valid @RequestBody PaymentDetailsModel paymentDetailsModel)
+    public String handleOrder (@Valid @RequestBody PaymentDetailsModel paymentDetailsModel)
     {
-        try {
-            paymentService.registerOrder(paymentDetailsModel);
-        } catch (ShoppingCartException e) {
-            return "Username does not exist!";
-        }
-        return "Success!";
-
+        paymentService.registerOrder(paymentDetailsModel);
+        return "Order was handled!";
     }
 }
+

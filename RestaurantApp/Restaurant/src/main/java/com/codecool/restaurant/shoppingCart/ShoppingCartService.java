@@ -1,9 +1,9 @@
 package com.codecool.restaurant.shoppingCart;
 
+import com.codecool.restaurant.exception.ShoppingCartException;
 import com.codecool.restaurant.user.User;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 
 @Service
 public class ShoppingCartService {
@@ -19,11 +19,11 @@ public class ShoppingCartService {
     }
 
     public ShoppingCart getCartByUser(User user) {
-        return shoppingCartRepository.findShoppingcartByUsername(user.getUserName());
+        return shoppingCartRepository.findShoppingCartByUser(user).orElseThrow(ShoppingCartException::new);
     }
 
-    public Optional<ShoppingCart> getCartById(Long id) {
-        return shoppingCartRepository.findById(id);
+    public ShoppingCart getCartById(Long id) {
+        return shoppingCartRepository.findById(id).orElseThrow(ShoppingCartException::new);
     }
 
 }

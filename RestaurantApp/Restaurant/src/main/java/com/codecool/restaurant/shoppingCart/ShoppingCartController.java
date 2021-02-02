@@ -34,8 +34,7 @@ public class ShoppingCartController {
         } else {
             Meal meal = new Meal(mealName, "https://www.themealdb.com/images/media/meals/" + image);
             mealService.addMeal(meal);
-            User user = userService.getUserByUsername(username)
-                    .orElse(null);
+            User user = userService.getUserByUsername(username);
             ShoppingCart cart = shoppingCartService.getCartByUser(user);
             mealsToCartService.addMealsToCart(new MealsToCart(cart, meal));
         }
@@ -43,8 +42,8 @@ public class ShoppingCartController {
 
     @GetMapping(path="mealsInCart/{id}")
     public Map<Meal, Integer> getAllMealInCart(@PathVariable("id") Long id){
-        Optional<ShoppingCart> cart = shoppingCartService.getCartById(id);
-        List<MealsToCart> list = mealsToCartService.getAllMealsByCart(cart.get());
+        ShoppingCart cart = shoppingCartService.getCartById(id);
+        List<MealsToCart> list = mealsToCartService.getAllMealsByCart(cart);
         Map<Meal, Integer> listOfMeals = new HashMap<>();
         for (MealsToCart meal: list) {
             listOfMeals.put(meal.getMeal(),meal.getQuantity());
@@ -54,9 +53,7 @@ public class ShoppingCartController {
 
     @GetMapping(path="view/{username}")
     public long getCartIdByUserName(@PathVariable("username") String username){
-          User user = userService.getUserByUsername(username)
-                .orElse(null);
+          User user = userService.getUserByUsername(username);
           return shoppingCartService.getCartByUser(user).getId();
     }
-
 }

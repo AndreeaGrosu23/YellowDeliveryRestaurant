@@ -19,27 +19,27 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
-//    @ExceptionHandler(CityNotFoundException.class)
-//    public ResponseEntity<Object> handleCityNotFoundException(
-//            CityNotFoundException ex, WebRequest request) {
-//
-//        Map<String, Object> body = new LinkedHashMap<>();
-//        body.put("timestamp", LocalDateTime.now());
-//        body.put("message", "City not found");
-//
-//        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
-//    }
-//
-//    @ExceptionHandler(NoDataFoundException.class)
-//    public ResponseEntity<Object> handleNodataFoundException(
-//            NoDataFoundException ex, WebRequest request) {
-//
-//        Map<String, Object> body = new LinkedHashMap<>();
-//        body.put("timestamp", LocalDateTime.now());
-//        body.put("message", "No cities found");
-//
-//        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
-//    }
+    @ExceptionHandler(NoDataFoundException.class)
+    public ResponseEntity<Object> handleNodataFoundException(
+            NoDataFoundException ex, WebRequest request) {
+
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", "No data found");
+
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ShoppingCartException.class)
+    public ResponseEntity<Object> handleShoppingCartException(
+            NoDataFoundException ex, WebRequest request) {
+
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", "No shopping cart found");
+
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(

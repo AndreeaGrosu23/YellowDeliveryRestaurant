@@ -1,5 +1,6 @@
 package com.codecool.restaurant.favoriteMeal;
 
+import com.codecool.restaurant.exception.NoDataFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -24,6 +25,7 @@ public class FavoriteMealService {
 
     @Transactional
     public void deleteFavoriteMealByIdMeal(String idMeal) {
-        favoriteMealRepository.deleteFavoriteMealByIdMeal(idMeal);
+        FavoriteMeal favoriteMeal = favoriteMealRepository.findFavoriteMealByIdMeal(idMeal).orElseThrow(NoDataFoundException::new);
+        favoriteMealRepository.delete(favoriteMeal);
     }
 }

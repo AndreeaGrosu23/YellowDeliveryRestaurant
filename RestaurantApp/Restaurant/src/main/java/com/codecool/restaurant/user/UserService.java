@@ -1,5 +1,6 @@
 package com.codecool.restaurant.user;
 
+import com.codecool.restaurant.exception.NoDataFoundException;
 import com.codecool.restaurant.security.JwtTokenServices;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -27,17 +28,22 @@ public class UserService {
     }
 
     // Persisting User with encoded password
-    public void addUser(User user){
+    public void addUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
 
-    public List<User> getAllUsers(){
-        return userRepository.findAll();
+
+    public List<User> getAllUsers() {
+        List<User> listUsers = userRepository.findAll();
+        if (listUsers.isEmpty()) {
+            throw new NoDataFoundException();
+        }
+        return listUsers;
     }
 
-    public Optional<User> getUserById(Long id){
-        return userRepository.findById(id);
+    public User getUserById(Long id){
+        return userRepository.findById(id).orElseThrow(NoDataFoundException::new);
     }
 
     @Transactional
@@ -45,14 +51,13 @@ public class UserService {
         userRepository.updateUser(firstName, lastName, emailAddress, password, deliveryAddress, phoneNumber, userName);
     }
 
-    public Optional<User> getUserByUsername(String username){
-        return userRepository.findByUserName(username);
+    public User getUserByUsername(String username){
+        return userRepository.findByUserName(username).orElseThrow(NoDataFoundException::new);
     }
 
     public void deleteUserApp(String token){
         Authentication userName = jwtTokenServices.parseUserFromTokenInfo(token);
-        Optional<User> tempUser = userRepository.findByUserName(userName.getName());
-        tempUser.ifPresent(userApp -> userRepository.deleteById(userApp.getId()));
+        User user = getUserByUsername(userName.getName());
+        userRepository.deleteById(user.getId());
     }
-
 }

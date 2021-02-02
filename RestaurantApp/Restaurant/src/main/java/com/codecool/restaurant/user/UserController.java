@@ -11,7 +11,7 @@ import java.util.*;
 @RequestMapping("api/v1/user")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
-@Api(tags = "User Queries", value = "UserQueries", description = "Controller for User Queries")
+@Api(tags = "User Queries", value = "UserQueries")
 public class UserController {
 
     private final UserService userService;
@@ -38,8 +38,7 @@ public class UserController {
     @GetMapping(path="{id}")
     @ApiOperation(value = "Find a user by id")
     public User getUserById(@PathVariable("id") Long id){
-        return userService.getUserById(id)
-                .orElse(null);
+        return userService.getUserById(id);
     }
 
     @DeleteMapping()
@@ -51,13 +50,16 @@ public class UserController {
     @GetMapping(path="view/{username}")
     @ApiOperation(value = "Find a user by username")
     public User getUserByUsername(@PathVariable("username") String username){
-        return userService.getUserByUsername(username)
-                .orElse(null);
+        return userService.getUserByUsername(username);
     }
 
     @PostMapping(path = "{username}/edit")
     @ApiOperation(value = "Update user details")
     public void updateUserProfile(@PathVariable("username") String username, @RequestBody User updatedUser) {
+
+        //throw exception if user not found (this method updateUserProfile needs refactoring for the entire logic)
+        userService.getUserByUsername(username);
+
         String firstName = updatedUser.getFirstName();
         String lastName = updatedUser.getLastName();
         String emailAddress = updatedUser.getEmailAddress();
