@@ -47,8 +47,12 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUser(String firstName, String lastName, String emailAddress, String password,String deliveryAddress, String phoneNumber, String userName) {
-        userRepository.updateUser(firstName, lastName, emailAddress, password, deliveryAddress, phoneNumber, userName);
+    public void updateUser(UserDetailsDto updatedUser, String userName) {
+        String firstName = updatedUser.getFirstName();
+        String lastName = updatedUser.getLastName();
+        String deliveryAddress = updatedUser.getDeliveryAddress();
+        String phoneNumber = updatedUser.getPhoneNumber();
+        userRepository.updateUser(firstName, lastName, deliveryAddress, phoneNumber, userName);
     }
 
     public User getUserByUsername(String username){

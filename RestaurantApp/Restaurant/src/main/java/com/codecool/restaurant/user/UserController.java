@@ -55,19 +55,12 @@ public class UserController {
 
     @PostMapping(path = "{username}/edit")
     @ApiOperation(value = "Update user details")
-    public void updateUserProfile(@PathVariable("username") String username, @RequestBody User updatedUser) {
+    public void updateUserProfile(@PathVariable("username") String username,@Valid @RequestBody UserDetailsDto updatedUser) {
 
-        //throw exception if user not found (this method updateUserProfile needs refactoring for the entire logic)
+        //throw exception if user not found
         userService.getUserByUsername(username);
 
-        String firstName = updatedUser.getFirstName();
-        String lastName = updatedUser.getLastName();
-        String emailAddress = updatedUser.getEmailAddress();
-        String password = updatedUser.getPassword();
-        String deliveryAddress = updatedUser.getDeliveryAddress();
-        String phoneNumber = updatedUser.getPhoneNumber();
-
-        userService.updateUser(firstName, lastName, emailAddress, password, deliveryAddress, phoneNumber, username);
+        userService.updateUser(updatedUser, username);
 
     }
 }

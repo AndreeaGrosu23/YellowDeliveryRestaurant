@@ -26,7 +26,7 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        User user = new User("admin", "admin", "admin", "andmim@gmail.com", "", "", passwordEncoder.encode("admin"));
+        User user = new User("admin", "admin", "admin", "admin@gmail.com", "", "", passwordEncoder.encode("admin"));
         userRepository.save(user);
         shoppingCartService.addCart(new ShoppingCart(user));
     }

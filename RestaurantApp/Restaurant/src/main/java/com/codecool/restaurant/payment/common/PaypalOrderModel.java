@@ -21,7 +21,6 @@ public class PaypalOrderModel {
     @NotBlank(message="Description cannot be empty")
     private String description;
 
-    @NotBlank(message="Paypal link cannot be empty")
     private String linkPaypal;
 
 }
