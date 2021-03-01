@@ -145,9 +145,9 @@ export default function UserProfile() {
                       type="email"
                       className="form-control"
                       placeholder={user.emailAddress}
-                      ref={register}
                       name="emailAddress"
-                      defaultValue={user.emailAddress}
+                      // defaultValue={user.emailAddress}
+                      disabled="true"
                     />
                   </div>
                   <div className="col-md-6">
@@ -155,8 +155,9 @@ export default function UserProfile() {
                       type="text"
                       className="form-control"
                       value={user.userName}
-                      ref={register}
                       name="userName"
+                      // defaultValue={user.userName}
+                      disabled="true"
                     />
                   </div>
                 </div>
@@ -183,24 +184,6 @@ export default function UserProfile() {
                       ref={register}
                       name="phoneNumber"
                       defaultValue={user.phoneNumber}
-                    />
-                  </div>
-                </div>
-                <div className="row mt-3">
-                  <div className="col-md-6">
-                    <input
-                      type="password"
-                      className="form-control"
-                      value={user.password}
-                      ref={register}
-                      name="password"
-                    />
-                  </div>
-                  <div className="col-md-6">
-                    <input
-                      type="password"
-                      className="form-control"
-                      value={user.password}
                     />
                   </div>
                 </div>

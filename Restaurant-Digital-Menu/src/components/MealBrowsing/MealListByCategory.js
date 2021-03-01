@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { FaHeart } from "react-icons/fa";
-import { Modal } from "react-bootstrap";
 import "./FoodCategories.css";
 
 function MealListByCategory({ name }) {
   const [foodListCategories, setFoodListCategories] = useState([]);
   const [favoriteMeals, setFavoriteMeals] = useState([]);
+  // const [updated, setUpdated] = useState(false);
 
   const username = window.sessionStorage.getItem("User");
   const token = window.sessionStorage.getItem("token");
@@ -49,7 +49,7 @@ function MealListByCategory({ name }) {
       }
     }
 
-    if (alreadyFave == false) {
+    if (alreadyFave === false) {
       fetch(
         `http://localhost:8080/api/v1/user/${username}/favorites/${newFavoriteMeal.idMeal}`,
         {
@@ -75,7 +75,9 @@ function MealListByCategory({ name }) {
       )
     }
     window.location.reload();
+    // setUpdated(true);
   };
+
 
   return (
     <div className="container FoodCategoriesContainer">
@@ -88,7 +90,7 @@ function MealListByCategory({ name }) {
           <img
             className="card-img-top cardImg"
             src={item.strMealThumb}
-            alt="Card image cap"
+            alt="Card cap"
           />
           <div className="card-body">
             <h5 className="card-title">{item.strMeal.substring(0, 20)}</h5>

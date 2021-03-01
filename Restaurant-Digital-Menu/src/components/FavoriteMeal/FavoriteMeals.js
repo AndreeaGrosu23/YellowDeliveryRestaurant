@@ -23,11 +23,11 @@ export default function FavoriteMeals() {
 
   return (
     <div
-      style={{ marginBottom: "25rem" }}
+      style={{ marginBottom: "50rem" }}
       className="container FoodCategoriesContainer"
     >
       <div style={{ color: "white" }}>
-        <h3>Favorite meals</h3>
+      { favoriteMeals.length > 1 ? <h3>Favorite meals</h3> : <h3>No favorite meals</h3> }
       </div>
       {favoriteMeals.map((item, i) => (
         <div
@@ -38,7 +38,7 @@ export default function FavoriteMeals() {
           <img
             className="card-img-top cardImg"
             src={item.image}
-            alt="Card image cap"
+            alt="Card cap"
           />
           <div className="card-body">
             <h5 className="card-title">{item.name.substring(0, 20)}</h5>
