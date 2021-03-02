@@ -7,11 +7,14 @@ function SearchResults({ name }) {
 
   useEffect(() => {
     async function getData() {
-      const response = await axios.get(
-        `https://www.themealdb.com/api/json/v1/1/filter.php?i=${name}`
-      );
-      setFoodListSearch(response.data.meals);
-      console.log(response.data.meals);
+      await axios
+        .get(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${name}`)
+        .then((res) => {
+          setFoodListSearch(res.data.meals);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
     getData();
   }, [name]);
@@ -21,24 +24,25 @@ function SearchResults({ name }) {
       {foodListSearch !== null ? (
         foodListSearch.map((item) => (
           <div
+            key={item.idMeal}
             className="card FoodCategoriesCard"
             style={{ width: "18rem", display: "inline-block" }}
           >
             <img
               className="card-img-top cardImg"
               src={item.strMealThumb}
-              alt="Card image cap"
+              alt="Card cap"
             />
             <div className="card-body">
               <h5 className="card-title">{item.strMeal.substring(0, 20)}</h5>
 
-              <a
-                href="#"
+              <span
                 onClick={() => handleClick(item)}
-                className="btn btn-primary"
+                role="img"
+                aria-label="cart"
               >
-                🛒
-              </a>
+                Add to 🛒
+              </span>
             </div>
           </div>
         ))
@@ -62,7 +66,7 @@ function handleClick(mealToAddToCart) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(mealToAddToCart),
     }

@@ -39,7 +39,9 @@ export default function MenuBar() {
         <Nav.Link href="/surprise-meal">Surprise Meal</Nav.Link>
         {userIsLogin ? null : <Nav.Link href="/signup">SignUp</Nav.Link>}
         {userIsLogin ? null : <Nav.Link href="/login">Login</Nav.Link>}
-        {userIsLogin ? <Nav.Link href="/user-profile">User Profile</Nav.Link> : null}
+        {userIsLogin ? (
+          <Nav.Link href="/user-profile">User Profile</Nav.Link>
+        ) : null}
         {userIsLogin ? <Nav.Link href="/logout">Logout</Nav.Link> : null}
         <Nav.Link href="#">
           {userIsLogin
@@ -60,13 +62,18 @@ export default function MenuBar() {
 
         <Link to={`/search/${dataInput}`}>
           <Button type="submit" variant="outline-success">
-            🔍
+            <span role="img" aria-label="search">
+              🔍
+            </span>
           </Button>
         </Link>
       </Form>
 
       <Button type="submit" variant="outline-success" onClick={toggleTheme}>
-        🎨
+        <span aria-label="paint" role="img">
+          {" "}
+          🎨
+        </span>
       </Button>
     </Navbar>
   );

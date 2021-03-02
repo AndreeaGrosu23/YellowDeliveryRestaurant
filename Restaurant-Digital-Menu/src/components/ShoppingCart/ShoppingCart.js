@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Card } from "react-bootstrap";
 import "../MealBrowsing/FoodCategories.css";
-import OrderDetails from "../OrderDetails/OrderDetails";
 import { Link } from "react-router-dom";
 
 function ShoppingCart() {
@@ -31,7 +30,7 @@ function ShoppingCart() {
       setListOfMeals(mealResponse.data);
     }
     getData();
-  }, [userName]);
+  }, [userName,token]);
 
   const getListOfMeals = (mapWithMeals) => {
     console.log(mapWithMeals);
