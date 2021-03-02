@@ -48,6 +48,9 @@ public class UserService {
 
     @Transactional
     public void updateUser(UserDetailsDto updatedUser, String userName) {
+        //throw exception if user not found
+        getUserByUsername(userName);
+
         String firstName = updatedUser.getFirstName();
         String lastName = updatedUser.getLastName();
         String deliveryAddress = updatedUser.getDeliveryAddress();

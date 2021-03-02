@@ -119,6 +119,7 @@ export default function UserProfile() {
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="row mt-2">
                   <div className="col-md-6">
+                    <label>First Name</label> 
                     <input
                       type="text"
                       className="form-control"
@@ -129,6 +130,7 @@ export default function UserProfile() {
                     />
                   </div>
                   <div className="col-md-6">
+                  <label>Last Name</label>
                     <input
                       type="text"
                       className="form-control"
@@ -141,28 +143,29 @@ export default function UserProfile() {
                 </div>
                 <div className="row mt-3">
                   <div className="col-md-6">
+                  <label>Email Address</label>
                     <input
                       type="email"
                       className="form-control"
                       placeholder={user.emailAddress}
                       name="emailAddress"
-                      // defaultValue={user.emailAddress}
                       disabled="true"
                     />
                   </div>
                   <div className="col-md-6">
+                  <label>Username</label>
                     <input
                       type="text"
                       className="form-control"
                       value={user.userName}
                       name="userName"
-                      // defaultValue={user.userName}
                       disabled="true"
                     />
                   </div>
                 </div>
                 <div className="row mt-3">
                   <div className="col-md-6">
+                  <label>Delivery Address</label>
                     <input
                       type="text"
                       className="form-control"
@@ -175,6 +178,7 @@ export default function UserProfile() {
                     />
                   </div>
                   <div className="col-md-6">
+                  <label>Phone Number</label>
                     <input
                       type="text"
                       className="form-control"
