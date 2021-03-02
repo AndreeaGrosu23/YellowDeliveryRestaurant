@@ -20,7 +20,7 @@ function SurpriseMeal() {
     return embedUrl;
   };
 
-  console.log(surpriseMeal.strYoutube);
+  
   return (
     <div className="container" style={{ width: "38rem", marginTop: "50px" }}>
       <div className="card">
@@ -28,7 +28,7 @@ function SurpriseMeal() {
           <img
             className="card-img-top"
             src={surpriseMeal.strMealThumb}
-            alt="Card image cap"
+            alt="Card cap"
           />
         </div>
         <div className="card-body">

@@ -82,7 +82,7 @@ export default function UserLogin() {
               placeholder="username"
               ref={register({ required: "This is required." })}
               type="text"
-              class="form-control"
+              className="form-control"
               id="user-name"
               required="required"
             />
@@ -93,7 +93,7 @@ export default function UserLogin() {
               name="password"
               ref={register({ required: "This is required." })}
               placeholder="Password"
-              class="form-control"
+              className="form-control"
               id="password"
               required="required"
             />

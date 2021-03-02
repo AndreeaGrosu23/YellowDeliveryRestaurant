@@ -45,7 +45,7 @@ function MealListByCategory({ name }) {
   for (let favoriteMeal of favoriteMeals) {
     listIds.push(favoriteMeal.idMeal);
   }
-  console.log(listIds);
+  
 
   const faveClick = (newFavoriteMeal) => {
     console.log("add fav");
