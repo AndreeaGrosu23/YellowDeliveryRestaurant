@@ -1,5 +1,6 @@
 package com.codecool.restaurant.user;
 
+import com.codecool.restaurant.favoriteMeal.FavoriteMeal;
 import com.codecool.restaurant.order.UserOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -13,7 +14,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor
 @Getter
@@ -58,6 +61,14 @@ public class User {
 
 //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<UserOrder> userOrders = new ArrayList<>();
+
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "FAVORITE_USER",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "favoriteMeal_id") }
+    )
+    Set<FavoriteMeal> favoriteMeals = new HashSet<>();
 
     public User(String firstName, String lastName, String userName, String emailAddress, String deliveryAddress, String phoneNumber, String password) {
         this.firstName = firstName;

@@ -118,7 +118,7 @@ export default function UserProfile() {
               </div>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="row mt-2">
-                  <div className="col-md-6">
+                  <div className="col-md-6">                   
                     <label>First Name</label> 
                     <input
                       type="text"
@@ -130,7 +130,7 @@ export default function UserProfile() {
                     />
                   </div>
                   <div className="col-md-6">
-                  <label>Last Name</label>
+                    <label>Last Name</label>
                     <input
                       type="text"
                       className="form-control"
@@ -143,7 +143,7 @@ export default function UserProfile() {
                 </div>
                 <div className="row mt-3">
                   <div className="col-md-6">
-                  <label>Email Address</label>
+                    <label>Email Address</label>
                     <input
                       type="email"
                       className="form-control"
@@ -153,7 +153,7 @@ export default function UserProfile() {
                     />
                   </div>
                   <div className="col-md-6">
-                  <label>Username</label>
+                    <label>Username</label>
                     <input
                       type="text"
                       className="form-control"
@@ -165,7 +165,7 @@ export default function UserProfile() {
                 </div>
                 <div className="row mt-3">
                   <div className="col-md-6">
-                  <label>Delivery Address</label>
+                    <label>Delivery Address</label>
                     <input
                       type="text"
                       className="form-control"
@@ -178,7 +178,7 @@ export default function UserProfile() {
                     />
                   </div>
                   <div className="col-md-6">
-                  <label>Phone Number</label>
+                    <label>Phone Number</label>
                     <input
                       type="text"
                       className="form-control"

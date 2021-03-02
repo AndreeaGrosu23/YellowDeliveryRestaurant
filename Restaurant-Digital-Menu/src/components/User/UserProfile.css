@@ -27,3 +27,8 @@
     color: #682773;
     cursor: pointer
 }
+
+label {
+    float: left;
+    color: grey
+}

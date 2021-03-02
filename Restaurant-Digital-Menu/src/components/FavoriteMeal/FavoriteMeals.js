@@ -26,37 +26,47 @@ export default function FavoriteMeals() {
       style={{ marginBottom: "50rem" }}
       className="container FoodCategoriesContainer"
     >
-      <div style={{ color: "white" }}>
-      { favoriteMeals.length > 1 ? <h3>Favorite meals</h3> : <h3>No favorite meals</h3> }
-      </div>
-      {favoriteMeals.map((item, i) => (
-        <div
-          key={i}
-          className="card FoodCategoriesCard"
-          style={{ width: "18rem", display: "inline-block" }}
-        >
-          <img
-            className="card-img-top cardImg"
-            src={item.image}
-            alt="Card cap"
-          />
-          <div className="card-body">
-            <h5 className="card-title">{item.name.substring(0, 20)}</h5>
-            <Link to={`/food-details/${item.idMeal}`}>
-              <button type="button" value="submit" className="btn btn-info">
-                Info
-              </button>{" "}
-            </Link>
-            <a
-              href="#"
-              onClick={() => handleClick(item)}
-              className="btn btn-primary"
-            >
-              🛒
-            </a>
+
+      { favoriteMeals.length === 0 ? 
+        <div style={{ color: "white" }}>
+          <h3>No favorite meals</h3> 
+        </div> 
+      : 
+        <div>
+          <div style={{ color: "white" }}>
+            <h3>Favorite meals</h3> 
           </div>
+          {favoriteMeals.map((item, i) => (
+            <div
+              key={i}
+            className="card FoodCategoriesCard"
+            style={{ width: "18rem", display: "inline-block" }}
+            >
+            <img
+              className="card-img-top cardImg"
+              src={item.image}
+              alt="Card cap"
+            />
+            <div className="card-body">
+              <h5 className="card-title">{item.name.substring(0, 20)}</h5>
+              <Link to={`/food-details/${item.idMeal}`}>
+                <button type="button" value="submit" className="btn btn-info">
+                  Info
+                </button>{" "}
+              </Link>
+              <a
+                href="#"
+                onClick={() => handleClick(item)}
+                className="btn btn-primary"
+              >
+                🛒
+              </a>
+            </div>
+          </div>
+          ))}
         </div>
-      ))}
+      }
+
     </div>
   );
 }
