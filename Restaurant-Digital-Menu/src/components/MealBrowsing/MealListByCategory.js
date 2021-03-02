@@ -7,7 +7,6 @@ import "./FoodCategories.css";
 function MealListByCategory({ name }) {
   const [foodListCategories, setFoodListCategories] = useState([]);
   const [favoriteMeals, setFavoriteMeals] = useState([]);
-  // const [updated, setUpdated] = useState(false);
 
   const username = window.sessionStorage.getItem("User");
   const token = window.sessionStorage.getItem("token");
@@ -75,7 +74,6 @@ function MealListByCategory({ name }) {
       )
     }
     window.location.reload();
-    // setUpdated(true);
   };
 
 
