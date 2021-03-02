@@ -3,32 +3,43 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import "./FoodCategories.css";
 import { ThemeContext } from "../../contexts/ThemeContext";
+import { useHistory } from "react-router";
 
 function FoodCategories() {
-  const { isDarkMode, toggleTheme } = useContext(ThemeContext);
+  const { isDarkMode } = useContext(ThemeContext);
   const [foodCategories, setFoodCategories] = useState([]);
   const [MoreDetails, setMoreDetails] = useState(false);
+  const history = useHistory();
 
   useEffect(() => {
     async function getData() {
-      const response = await axios.get(
-        "https://www.themealdb.com/api/json/v1/1/categories.php"
-      );
-      setFoodCategories(response.data.categories);
+      await axios
+        .get("https://www.themealdb.com/api/json/v1/1/categories.php")
+        .then((res) => {
+          setFoodCategories(res.data.categories);
+        })
+        .catch((error) => {
+          history.push({
+            pathname: "/error",
+            state: { detail: error.message },
+          });
+        });
     }
     getData();
-  }, []);
+  }, [history]);
 
   const showMore = (e) => {
     e.preventDefault();
     let id = e.target.name;
 
-    foodCategories.map((item) => {
-      if (item.idCategory === id) {
-        item.showMoreDetails = !item.showMoreDetails;
+    for (let index = 0; index < foodCategories.length; index++) {
+      if (foodCategories[index].idCategory === id) {
+        console.log("object");
+        foodCategories[index].showMoreDetails = !foodCategories[index]
+          .showMoreDetails;
       }
       setMoreDetails(!MoreDetails);
-    });
+    }
   };
 
   const textDisplay = (show) => {
@@ -54,12 +65,15 @@ function FoodCategories() {
 
             <p className="card-text FoodCategoriesCardText">
               {item.showMoreDetails
-              ? item.strCategoryDescription
-              : item.strCategoryDescription.substring(0, 50) + "..."
-              } {" "}
-              <a href="#" name={item.idCategory} onClick={showMore}>
+                ? item.strCategoryDescription
+                : item.strCategoryDescription.substring(0, 50) + "..."}
+              <button
+                name={item.idCategory}
+                onClick={showMore}
+                className=" btn btn-link btn-sm shadow-none"
+              >
                 {textDisplay(item.showMoreDetails)}
-              </a>
+              </button>
             </p>
 
             <Link

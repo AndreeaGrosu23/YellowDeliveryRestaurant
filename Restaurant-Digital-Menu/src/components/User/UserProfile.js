@@ -13,7 +13,7 @@ export default function UserProfile() {
   const token = window.sessionStorage.getItem("token");
 
   const userName = window.sessionStorage.getItem("User");
-  console.log(userName);
+ 
 
   const [user, setUser] = useState([]);
   const [toHome, setToHome] = useState();
@@ -34,7 +34,7 @@ export default function UserProfile() {
       console.log(response.data);
     }
     getData();
-  }, [token, userName]);
+  }, []);
 
   const onSubmit = (data) => {
     console.log(data);

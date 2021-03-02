@@ -4,20 +4,25 @@ import { useHistory } from "react-router-dom";
 
 function UserLogout() {
   const history = useHistory();
-
-  let logoutResponse = handleLogout();
-  console.log(logoutResponse);
-  window.sessionStorage.clear();
-  history.push("/surprise-meal");
-
-  return (
-    <div>
-      <h1>Logout Page</h1>
-    </div>
-  );
+  const doLogout = () => {
+    handleLogout()
+      .then((res) => {
+        console.log(res);
+        window.sessionStorage.clear();
+        history.push("/surprise-meal");
+      })
+      .catch((error) => {
+        history.push({
+          pathname: "/error",
+          state: { detail: error.message },
+        });
+      });
+  };
+  return <>{doLogout()}</>;
 }
 async function handleLogout() {
-  await axios.get("http://localhost:8080/auth/logout");
+  const responseData = await axios.get("http://localhost:8080/auth/logout");
+  return responseData.data;
 }
 
 export default UserLogout;

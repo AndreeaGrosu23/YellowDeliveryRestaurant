@@ -5,6 +5,7 @@ import { Button, Modal } from "react-bootstrap";
 import "./UserLogin.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 export default function UserLogin() {
   const { register, handleSubmit } = useForm();
@@ -24,20 +25,24 @@ export default function UserLogin() {
     setPasswordShown(passwordShown ? false : true);
   };
 
-  const onSubmit = (data) => {
-    let promiseA = loginUser(data);
-    promiseA.then(function (result) {
-      if (result.username) {
-        window.sessionStorage.setItem("User", result.username);
-        window.sessionStorage.setItem("token", result.token);
-        setUserLogin(true);
-        history.push("/categories");
-      } else {
+  async function handleLogin(data) {
+    try {
+      await axios
+        .post("http://localhost:8080/auth/login", data)
+        .then((result) => {
+          window.sessionStorage.setItem("User", result.data.username);
+          window.sessionStorage.setItem("token", result.data.token);
+          setUserLogin(true);
+        });
+    } catch (error) {
+      if (error.message === "Request failed with status code 403") {
         setModalMessage("Username or Password is incorrect");
         handleShow();
+      } else {
+        history.push({ pathname: "/error", state: { detail: error.message } });
       }
-    });
-  };
+    }
+  }
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -69,7 +74,7 @@ export default function UserLogin() {
           display: "flex",
         }}
       >
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(handleLogin)}>
           <h5 style={{ color: "white" }}>Login</h5>
           <div className="form-group">
             <input
@@ -105,13 +110,4 @@ export default function UserLogin() {
       </div>
     </div>
   );
-}
-
-async function loginUser(data) {
-  let responseLogin = await fetch("http://localhost:8080/auth/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  }).then((response) => response.json());
-  return responseLogin;
 }

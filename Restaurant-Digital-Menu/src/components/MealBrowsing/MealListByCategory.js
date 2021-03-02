@@ -13,29 +13,35 @@ function MealListByCategory({ name }) {
 
   useEffect(() => {
     async function getData() {
-      const response = await axios.get(
-        `https://www.themealdb.com/api/json/v1/1/filter.php?c=${name}`
-      );
-      setFoodListCategories(response.data.meals);
+      await axios
+        .get(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${name}`)
+        .then((res) => {
+          setFoodListCategories(res.data.meals);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
     getData();
   }, [name]);
 
   useEffect(() => {
     async function getDataFavorites() {
-      const responseFavorites = await axios.get(
-        `http://localhost:8080/api/v1/user/${username}/favorites`,
-        {
-          headers: { "Authorization" : `Bearer ${token}` }
-        }
-      );
-      setFavoriteMeals(responseFavorites.data);  
-      console.log(responseFavorites.data);
+      await axios
+        .get(`http://localhost:8080/api/v1/user/${username}/favorites`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          setFavoriteMeals(res.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
     getDataFavorites();
-  }, []);
+  }, [username, token]);
 
-  const listIds = []
+  const listIds = [];
   for (let favoriteMeal of favoriteMeals) {
     listIds.push(favoriteMeal.idMeal);
   }
@@ -73,16 +79,15 @@ function MealListByCategory({ name }) {
         `http://localhost:8080/api/v1/user/${username}/favorites/delete/${newFavoriteMeal.idMeal}`,
         {
           method: "DELETE",
-          headers: { 
+          headers: {
             "Content-Type": "application/json",
-            "Authorization" : `Bearer ${token}` 
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
-      )
+      );
     }
     window.location.reload();
   };
-
 
   return (
     <div className="container FoodCategoriesContainer">
@@ -105,21 +110,26 @@ function MealListByCategory({ name }) {
               onClick={() => faveClick(item)}
             >
               <h5>
-                { listIds.includes(item.idMeal) ? <FaHeart style={{ color: "red" }} /> : <FaHeart style={{ color: "blue" }} /> }
+                {listIds.includes(item.idMeal) ? (
+                  <FaHeart style={{ color: "red" }} />
+                ) : (
+                  <FaHeart style={{ color: "blue" }} />
+                )}
               </h5>
             </button>{" "}
             <Link to={`/food-details/${item.idMeal}`}>
-              <button type="button" value="submit" className="btn btn-info">
+              <button type="button" value="submit" className="btn btn-link">
                 Info
               </button>{" "}
             </Link>
-            <a
-              href="#"
+            <button
               onClick={() => handleClick(item)}
-              className="btn btn-primary"
+              className="btn btn-light"
             >
-              🛒
-            </a>
+              <span role="img" aria-label="cart">
+                🛒
+              </span>
+            </button>
           </div>
         </div>
       ))}
@@ -140,7 +150,7 @@ function handleClick(mealToAddToCart) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization" : `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(mealToAddToCart),
     }
