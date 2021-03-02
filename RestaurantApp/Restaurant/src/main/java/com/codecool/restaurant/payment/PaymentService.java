@@ -25,7 +25,7 @@ public class PaymentService {
 
     private final RestTemplate restTemplate;
 
-    @Autowired
+//    @Autowired
     public PaymentService(MealsToCartService mealsToCartService, UserService userService, ShoppingCartService shoppingCartService, UserOrderRepository userOrderRepository, RestTemplate restTemplate) {
         this.mealsToCartService = mealsToCartService;
         this.userService = userService;

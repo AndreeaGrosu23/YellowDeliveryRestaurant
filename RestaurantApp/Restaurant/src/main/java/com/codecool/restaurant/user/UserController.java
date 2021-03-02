@@ -56,12 +56,7 @@ public class UserController {
     @PostMapping(path = "{username}/edit")
     @ApiOperation(value = "Update user details")
     public void updateUserProfile(@PathVariable("username") String username,@Valid @RequestBody UserDetailsDto updatedUser) {
-
-        //throw exception if user not found
-        userService.getUserByUsername(username);
-
         userService.updateUser(updatedUser, username);
-
     }
 }
 
