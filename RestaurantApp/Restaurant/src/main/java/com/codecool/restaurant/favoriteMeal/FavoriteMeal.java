@@ -24,7 +24,6 @@ public class FavoriteMeal {
     private String name;
     private String image;
 
-
     public FavoriteMeal(String name, String image, String idMeal) {
         this.name = name;
         this.image = image;
