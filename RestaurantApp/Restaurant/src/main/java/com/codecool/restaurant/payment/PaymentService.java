@@ -54,6 +54,7 @@ public class PaymentService {
     public String requestPayment(PaypalOrderModel paypalOrderModel){
         String result;
         PaypalOrderModel response = restTemplate.postForObject("http://payment-service/api/v1/payment", paypalOrderModel, PaypalOrderModel.class);
+        System.out.println(paypalOrderModel);
         result=response.getLinkPaypal();
         return result;
     }

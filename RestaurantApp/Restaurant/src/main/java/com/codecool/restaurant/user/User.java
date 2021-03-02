@@ -56,8 +56,8 @@ public class User {
     // roles of the user (ADMIN, USER,..)
     private String userRole= "ROLE_USER";
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserOrder> userOrders = new ArrayList<>();
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<UserOrder> userOrders = new ArrayList<>();
 
     public User(String firstName, String lastName, String userName, String emailAddress, String deliveryAddress, String phoneNumber, String password) {
         this.firstName = firstName;
@@ -69,19 +69,5 @@ public class User {
         this.password = password;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", userName='" + userName + '\'' +
-                ", emailAddress='" + emailAddress + '\'' +
-                ", deliveryAddress='" + deliveryAddress + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", password='" + password + '\'' +
-                ", userRole=" + userRole +
-                ", userOrders=" + userOrders +
-                '}';
-    }
+
 }

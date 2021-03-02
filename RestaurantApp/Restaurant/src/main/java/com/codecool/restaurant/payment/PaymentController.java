@@ -19,6 +19,7 @@ public class PaymentController {
 
     @PostMapping("/request-payment")
     public String requestPayment(@Valid @RequestBody PaypalOrderModel paypalOrderModel){
+        System.out.println(paypalOrderModel);
         return paymentService.requestPayment(paypalOrderModel);
     }
 
