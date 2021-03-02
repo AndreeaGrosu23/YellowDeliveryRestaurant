@@ -29,7 +29,8 @@ function MealListByCategory({ name }) {
           headers: { "Authorization" : `Bearer ${token}` }
         }
       );
-      setFavoriteMeals(responseFavorites.data);   
+      setFavoriteMeals(responseFavorites.data);  
+      console.log(responseFavorites.data);
     }
     getDataFavorites();
   }, []);
@@ -41,6 +42,7 @@ function MealListByCategory({ name }) {
   console.log(listIds);
 
   const faveClick = (newFavoriteMeal) => {
+    console.log("add fav");
     let alreadyFave = false;
     for (let item of favoriteMeals) {
       if (item.idMeal === newFavoriteMeal.idMeal) {
@@ -49,17 +51,22 @@ function MealListByCategory({ name }) {
     }
 
     if (alreadyFave === false) {
+      const favoriteMeal={
+        idMeal: newFavoriteMeal.idMeal,
+        name: newFavoriteMeal.strMeal,
+        image: newFavoriteMeal.strMealThumb
+      };
       fetch(
-        `http://localhost:8080/api/v1/user/${username}/favorites/${newFavoriteMeal.idMeal}`,
+        `http://localhost:8080/api/v1/user/${username}/favorites`,
         {
-          method: "PUT",
+          method: "POST",
           headers: { "Content-Type": "application/json",
           "Authorization" : `Bearer ${token}` 
         },
-          body: JSON.stringify(newFavoriteMeal),
+          body: JSON.stringify(favoriteMeal),
         }
       ).then((response) => {
-        console.log(response);
+        console.log("add to db");
       });
     } else {
       fetch(

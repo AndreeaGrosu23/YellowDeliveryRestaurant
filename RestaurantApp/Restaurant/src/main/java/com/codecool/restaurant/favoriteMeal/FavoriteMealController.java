@@ -4,8 +4,7 @@ import com.codecool.restaurant.user.User;
 import com.codecool.restaurant.user.UserService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.Set;
 
 @RequestMapping("api/v1/user")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -20,31 +19,20 @@ public class FavoriteMealController {
         this.userService = userService;
     }
 
-    // to refactor to favorite DTO
-    @PutMapping(path = "{username}/favorites/{idMeal}")
-    public void addMealToFavorites(@PathVariable("username") String username, @RequestBody HashMap<String, String> listMealAttributes){
-        User user = userService.getUserByUsername(username);
-        String idMeal = listMealAttributes.get("idMeal");
-        String name = listMealAttributes.get("strMeal");
-        String image = listMealAttributes.get("strMealThumb");
-        FavoriteMeal favoriteMeal = new FavoriteMeal(user,name,image,idMeal);
-        favoriteMealService.addFavoriteMeal(favoriteMeal);
+    @PostMapping(path = "{username}/favorites")
+    public User addMealToFavorites(@PathVariable("username") String username, @RequestBody FavoriteMealDto favoriteMealDto){
+        favoriteMealService.addFavoriteMeal(favoriteMealDto, username);
+        return userService.getUserByUsername(username);
     }
 
     @GetMapping(path = "{username}/favorites")
-    public List<FavoriteMeal> getFavorites(@PathVariable("username") String username) {
-        User user = userService.getUserByUsername(username);
-        return favoriteMealService.getAllFavoriteMeals(user.getId());
+    public Set<FavoriteMeal> getFavorites(@PathVariable("username") String username) {
+        return favoriteMealService.getAllFavoriteMeals(username);
+
     }
 
     @DeleteMapping(path = "{username}/favorites/delete/{idMeal}")
     public void deleteFavoriteByIdMeal(@PathVariable("username") String username, @PathVariable("idMeal") String idMeal) {
-        User user = userService.getUserByUsername(username);
-        List<FavoriteMeal> favoriteMeals = favoriteMealService.getAllFavoriteMeals(user.getId());
-        for (FavoriteMeal favoriteMeal : favoriteMeals) {
-            if (favoriteMeal.getIdMeal().equals(idMeal)) {
-                favoriteMealService.deleteFavoriteMealByIdMeal(idMeal);
-            }
-        }
+        favoriteMealService.deleteFavoriteMealByIdMeal(username, idMeal);
     }
 }
