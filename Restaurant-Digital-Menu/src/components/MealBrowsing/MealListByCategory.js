@@ -175,7 +175,7 @@ export default MealListByCategory;
 async function addMealToUserCart({ params, token }) {
   try {
     const dataResponse = await axios.post(
-      "http://localhost:8080/api/v1/cart/meal",
+      "http://localhost:8080/api/v1/cart/",
       params,
       { headers: { Authorization: `Bearer ${token}` } }
     );
