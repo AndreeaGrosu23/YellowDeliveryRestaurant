@@ -19,7 +19,7 @@ public class ShoppingCart {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="userApp_id")
+    @JoinColumn(name="user_id")
     private User user;
 
     public ShoppingCart(User user) {

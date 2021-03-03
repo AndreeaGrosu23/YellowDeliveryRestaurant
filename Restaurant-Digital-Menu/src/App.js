@@ -4,7 +4,7 @@ import "./App.css";
 import Footer from "./components/Footer";
 import MenuBar from "./components/Navbar/Navbar";
 import FoodCategories from "./components/MealBrowsing/FoodCategories";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import SurpriseMeal from "./components/MealBrowsing/SurpriseMeal";
 import MealListByCategory from "./components/MealBrowsing/MealListByCategory";
 import SearchResults from "./components/MealBrowsing/SearchResults";
@@ -21,6 +21,7 @@ import FavoriteMeals from "./components/FavoriteMeal/FavoriteMeals";
 import OrderDetails from "./components/OrderDetails/OrderDetails";
 import PaymentSuccess from "./components/Payment/PaymentSuccess";
 import PaymentCancel from "./components/Payment/PaymentCancel";
+import GenericErrorPage from "./components/ErrorPage/GenericErrorPage";
 
 function App() {
   return (
@@ -31,7 +32,6 @@ function App() {
           <div>
             <Switch>
               <Route path="/categories" exact component={FoodCategories} />
-              <Route path="/" exact component={AllMeals} />
               <Route
                 path="/categories/:name"
                 render={(e) => (
@@ -72,7 +72,9 @@ function App() {
                 exact
                 component={PaymentCancel}
               ></Route>
-              <Redirect to="/" />
+              <Route path="/" exact component={AllMeals} />
+              <Route exact path="/error" component={GenericErrorPage} />
+              <Route component={GenericErrorPage} />
             </Switch>
           </div>
           <Footer />

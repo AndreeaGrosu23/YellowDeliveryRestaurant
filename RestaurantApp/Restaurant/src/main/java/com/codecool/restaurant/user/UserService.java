@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -47,8 +46,16 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUser(String firstName, String lastName, String emailAddress, String password,String deliveryAddress, String phoneNumber, String userName) {
-        userRepository.updateUser(firstName, lastName, emailAddress, password, deliveryAddress, phoneNumber, userName);
+    public void updateUser(UserDetailsDto updatedUser, String userName) {
+        //throw exception if user not found
+        User user = getUserByUsername(userName);
+
+        user.setFirstName(updatedUser.getFirstName());
+        user.setLastName(updatedUser.getLastName());
+        user.setDeliveryAddress(updatedUser.getDeliveryAddress());
+        user.setPhoneNumber(updatedUser.getPhoneNumber());
+
+        userRepository.save(user);
     }
 
     public User getUserByUsername(String username){

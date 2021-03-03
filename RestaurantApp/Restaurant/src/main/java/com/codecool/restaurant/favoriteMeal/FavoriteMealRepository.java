@@ -1,14 +1,10 @@
 package com.codecool.restaurant.favoriteMeal;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
-
+@Repository
 public interface FavoriteMealRepository extends JpaRepository<FavoriteMeal, Long> {
 
-    List<FavoriteMeal> getAllFavoriteMealsByUserId(Long user_id);
-
-    Optional<FavoriteMeal> findFavoriteMealByIdMeal(String idMeal);
-
+    FavoriteMeal findFavoriteMealByIdMeal(String idMeal);
 }

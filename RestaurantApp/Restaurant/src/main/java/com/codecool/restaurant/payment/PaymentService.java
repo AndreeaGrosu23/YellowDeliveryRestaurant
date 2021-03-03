@@ -3,7 +3,6 @@ package com.codecool.restaurant.payment;
 import com.codecool.restaurant.meal.MealsToCartService;
 import com.codecool.restaurant.payment.common.PaypalOrderModel;
 import com.codecool.restaurant.shoppingCart.ShoppingCart;
-import com.codecool.restaurant.exception.ShoppingCartException;
 import com.codecool.restaurant.shoppingCart.ShoppingCartService;
 import com.codecool.restaurant.user.User;
 import com.codecool.restaurant.user.UserService;
@@ -25,7 +24,6 @@ public class PaymentService {
 
     private final RestTemplate restTemplate;
 
-    //As of Spring 4.3, classes with a single constructor can omit the @Autowired annotation
     public PaymentService(MealsToCartService mealsToCartService, UserService userService, ShoppingCartService shoppingCartService, UserOrderRepository userOrderRepository, RestTemplate restTemplate) {
         this.mealsToCartService = mealsToCartService;
         this.userService = userService;
@@ -54,6 +52,7 @@ public class PaymentService {
     public String requestPayment(PaypalOrderModel paypalOrderModel){
         String result;
         PaypalOrderModel response = restTemplate.postForObject("http://payment-service/api/v1/payment", paypalOrderModel, PaypalOrderModel.class);
+        System.out.println(paypalOrderModel);
         result=response.getLinkPaypal();
         return result;
     }

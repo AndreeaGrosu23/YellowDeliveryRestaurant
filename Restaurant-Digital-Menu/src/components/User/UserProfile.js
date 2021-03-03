@@ -13,7 +13,6 @@ export default function UserProfile() {
   const token = window.sessionStorage.getItem("token");
 
   const userName = window.sessionStorage.getItem("User");
-  console.log(userName);
 
   const [user, setUser] = useState([]);
   const [toHome, setToHome] = useState();
@@ -23,32 +22,33 @@ export default function UserProfile() {
 
   useEffect(() => {
     async function getData() {
-      const response = await axios.get(
-        `http://localhost:8080/api/v1/user/view/${userName}`,
+      await axios
+        .get(
+          `http://localhost:8080/api/v1/user/view/${userName}`,
 
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      setUser(response.data);
-      console.log(response.data);
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        )
+        .then((res) => {
+          setUser(res.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
     getData();
   }, [token, userName]);
 
   const onSubmit = (data) => {
-    console.log(data);
-    fetch(
-      `http://localhost:8080/api/v1/user/${userName}/edit`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(data),
-      }
-    ).then((response) => {
+    fetch(`http://localhost:8080/api/v1/user/${userName}/edit`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    }).then((response) => {
       if (response.status === 200) {
         handleShow();
       }
@@ -79,7 +79,7 @@ export default function UserProfile() {
 
   return (
     <div style={{ marginBottom: "25rem" }}>
-      {toHome ? <Redirect to="/" /> : null}
+      {toHome || userName === null ? <Redirect to="/" /> : null}
       <div className="container rounded bg-white mt-5">
         <div className="row">
           <div className="col-md-4 border-right">
@@ -119,6 +119,7 @@ export default function UserProfile() {
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="row mt-2">
                   <div className="col-md-6">
+                    <label>First Name</label>
                     <input
                       type="text"
                       className="form-control"
@@ -129,6 +130,7 @@ export default function UserProfile() {
                     />
                   </div>
                   <div className="col-md-6">
+                    <label>Last Name</label>
                     <input
                       type="text"
                       className="form-control"
@@ -141,27 +143,29 @@ export default function UserProfile() {
                 </div>
                 <div className="row mt-3">
                   <div className="col-md-6">
+                    <label>Email Address</label>
                     <input
                       type="email"
                       className="form-control"
-                      placeholder={user.emailAddress}
-                      ref={register}
-                      name="emailAddress"
                       defaultValue={user.emailAddress}
+                      name="emailAddress"
+                      disabled={true}
                     />
                   </div>
                   <div className="col-md-6">
+                    <label>Username</label>
                     <input
                       type="text"
                       className="form-control"
-                      value={user.userName}
-                      ref={register}
+                      defaultValue={user.userName}
                       name="userName"
+                      disabled={true}
                     />
                   </div>
                 </div>
                 <div className="row mt-3">
                   <div className="col-md-6">
+                    <label>Delivery Address</label>
                     <input
                       type="text"
                       className="form-control"
@@ -174,6 +178,7 @@ export default function UserProfile() {
                     />
                   </div>
                   <div className="col-md-6">
+                    <label>Phone Number</label>
                     <input
                       type="text"
                       className="form-control"
@@ -183,24 +188,6 @@ export default function UserProfile() {
                       ref={register}
                       name="phoneNumber"
                       defaultValue={user.phoneNumber}
-                    />
-                  </div>
-                </div>
-                <div className="row mt-3">
-                  <div className="col-md-6">
-                    <input
-                      type="password"
-                      className="form-control"
-                      value={user.password}
-                      ref={register}
-                      name="password"
-                    />
-                  </div>
-                  <div className="col-md-6">
-                    <input
-                      type="password"
-                      className="form-control"
-                      value={user.password}
                     />
                   </div>
                 </div>

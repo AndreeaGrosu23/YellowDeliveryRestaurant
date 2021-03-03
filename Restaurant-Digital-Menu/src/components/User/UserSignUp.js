@@ -15,7 +15,7 @@ export default function UserSignUp() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     }).then((response) => {
-      console.log(response);
+     
       if (response.status === 200) {
         setToHome(true);
       } else if(response.status ===500){
@@ -41,76 +41,76 @@ export default function UserSignUp() {
       >
         <form onSubmit={handleSubmit(onSubmit)}>
           <h5 style={{ color: "white" }}>Register account</h5>
-          <div class="form-group">
+          <div className="form-group">
             <input
               name="firstName"
               placeholder="First name"
               ref={register}
               type="text"
-              class="form-control"
+              className="form-control"
               id="first-name"
               required="required"
             />
           </div>
-          <div class="form-group">
+          <div className="form-group">
             <input
               name="lastName"
               placeholder="Last name"
               ref={register}
               type="text"
-              class="form-control"
+              className="form-control"
               id="last-name"
               required="required"
             />
           </div>
-          <div class="form-group">
+          <div className="form-group">
             <input
               name="userName"
               placeholder="Username"
               ref={register({ required: true, maxLength: 20 })}
               type="text"
-              class="form-control"
+              className="form-control"
               id="user-name"
               required="required"
             />
             {errors.userName && "Username is required"}
           </div>
-          <div class="form-group">
+          <div className="form-group">
             <input
               name="emailAddress"
               placeholder="Email Address"
               ref={register({ required: true, maxLength: 30 })}
               type="email"
-              class="form-control"
+              className="form-control"
               id="email-address"
               required="required"
             />
             {errors.emailAddress && "E-mail is required"}
           </div>
-          <div class="form-group">
+          <div className="form-group">
             <input
               type="password"
               name="password"
               placeholder="Password"
               ref={register}
-              class="form-control"
+              className="form-control"
               id="password"
               required="required"
             />
             {errors.password && "Password is required"}
           </div>
-          <div class="form-group">
+          <div className="form-group">
             <input
               type="password"
               name="confirmPassword"
               placeholder="Confirm password"
               ref={register}
-              class="form-control"
+              className="form-control"
               id="confirm-password"
               required="required"
             />
           </div>
-          <input type="submit" class="btn btn-primary" />
+          <input type="submit" className="btn btn-primary" />
         </form>
       </div>
       <>

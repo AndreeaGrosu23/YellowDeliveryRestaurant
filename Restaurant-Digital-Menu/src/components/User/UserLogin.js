@@ -5,9 +5,10 @@ import { Button, Modal } from "react-bootstrap";
 import "./UserLogin.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 export default function UserLogin() {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, errors } = useForm();
   const [userLogin, setUserLogin] = useState(false);
   // Pop-up Alert
   const [show, setShow] = useState(false);
@@ -24,20 +25,24 @@ export default function UserLogin() {
     setPasswordShown(passwordShown ? false : true);
   };
 
-  const onSubmit = (data) => {
-    let promiseA = loginUser(data);
-    promiseA.then(function (result) {
-      if (result.username) {
-        window.sessionStorage.setItem("User", result.username);
-        window.sessionStorage.setItem("token", result.token);
-        setUserLogin(true);
-        history.push("/categories");
-      } else {
+  async function handleLogin(data) {
+    try {
+      await axios
+        .post("http://localhost:8080/auth/login", data)
+        .then((result) => {
+          window.sessionStorage.setItem("User", result.data.username);
+          window.sessionStorage.setItem("token", result.data.token);
+          setUserLogin(true);
+        });
+    } catch (error) {
+      if (error.message === "Request failed with status code 403") {
         setModalMessage("Username or Password is incorrect");
         handleShow();
+      } else {
+        history.push({ pathname: "/error", state: { detail: error.message } });
       }
-    });
-  };
+    }
+  }
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -69,29 +74,39 @@ export default function UserLogin() {
           display: "flex",
         }}
       >
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(handleLogin)}>
           <h5 style={{ color: "white" }}>Login</h5>
           <div className="form-group">
             <input
               name="username"
               placeholder="username"
-              ref={register({ required: "This is required." })}
+              ref={register({
+                required: { message: "This field is mandatory", value: true },
+                minLength: { message: "Minim 4 characters", value: 4 },
+              })}
               type="text"
-              class="form-control"
+              className="form-control"
               id="user-name"
-              required="required"
             />
+            {errors.username && (
+              <small className="text-danger">{errors.username.message}</small>
+            )}
           </div>
           <div className="form-group">
             <input
               type={passwordShown ? "text" : "password"}
               name="password"
-              ref={register({ required: "This is required." })}
+              ref={register({
+                required: { message: "This field is mandatory", value: true },
+                minLength: { message: "Minim 4 characters", value: 4 },
+              })}
               placeholder="Password"
-              class="form-control"
+              className="form-control"
               id="password"
-              required="required"
             />
+            {errors.password && (
+              <small className="text-danger">{errors.password.message}</small>
+            )}
             <br></br>
             <h6 style={{ color: "white" }}>
               <i style={{ color: "white" }} onClick={togglePasswordVisiblity}>
@@ -105,13 +120,4 @@ export default function UserLogin() {
       </div>
     </div>
   );
-}
-
-async function loginUser(data) {
-  let responseLogin = await fetch("http://localhost:8080/auth/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  }).then((response) => response.json());
-  return responseLogin;
 }

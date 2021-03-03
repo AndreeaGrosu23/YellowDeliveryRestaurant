@@ -19,7 +19,7 @@ function PaymentStatus() {
     updateOrder();
   }, [userName]);
   return (
-    <div style={{ color: "white", marginBottom: "50rem" }}>
+    <div style={{ color: "white", marginBottom: "50rem", marginTop:"20rem" }}>
       <h1>Payment Success</h1>
       <h2>Food on your way !</h2>
     </div>

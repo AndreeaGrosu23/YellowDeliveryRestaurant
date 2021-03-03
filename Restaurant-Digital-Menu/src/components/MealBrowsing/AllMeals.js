@@ -7,11 +7,14 @@ function AllMeals() {
 
   useEffect(() => {
     async function getData() {
-      const response = await axios.get(
-        "https://www.themealdb.com/api/json/v1/1/search.php?f=b"
-      );
-      setAllMeals(response.data.meals);
-      console.log(response.data.meals);
+      await axios
+        .get("https://www.themealdb.com/api/json/v1/1/search.php?f=b")
+        .then((res) => {
+          setAllMeals(res.data.meals);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
     getData();
   }, []);
@@ -31,7 +34,7 @@ function AllMeals() {
             <img
               className="card-img-top cardImg"
               src={item.strMealThumb}
-              alt="Card image cap"
+              alt="Card  cap"
             />
             <div className="card-body">
               <h5 className="card-title">{item.strMeal.substring(0, 20)}</h5>

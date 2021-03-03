@@ -15,7 +15,7 @@ function Footer() {
     >
       <div className="footer-copyright text-center text-white py-3">
         © 2020 Copyright:
-        <a href="#" style={{ color: "white" }}>
+        <a href="/" style={{ color: "white" }}>
           {" "}
           Yellow Team Restaurant
         </a>
@@ -27,7 +27,7 @@ function Footer() {
             <FontAwesomeIcon icon={faFacebook} size="1x" color="white" />
           </a>
           <a href="https://www.instagram.com/" className="instagram social">
-            <FontAwesomeIcon icon={faInstagram} size="1x"  color="white"/>
+            <FontAwesomeIcon icon={faInstagram} size="1x" color="white" />
           </a>
         </div>
       </div>

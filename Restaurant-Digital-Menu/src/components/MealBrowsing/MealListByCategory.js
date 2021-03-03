@@ -2,46 +2,56 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { FaHeart } from "react-icons/fa";
-import { Modal } from "react-bootstrap";
 import "./FoodCategories.css";
+import Toast from "react-bootstrap/Toast";
 
 function MealListByCategory({ name }) {
   const [foodListCategories, setFoodListCategories] = useState([]);
   const [favoriteMeals, setFavoriteMeals] = useState([]);
+  const [toast, setToast] = useState(false);
+  const [toastBody, setToastBody] = useState([]);
 
   const username = window.sessionStorage.getItem("User");
   const token = window.sessionStorage.getItem("token");
 
   useEffect(() => {
     async function getData() {
-      const response = await axios.get(
-        `https://www.themealdb.com/api/json/v1/1/filter.php?c=${name}`
-      );
-      setFoodListCategories(response.data.meals);
+      await axios
+        .get(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${name}`)
+        .then((res) => {
+          setFoodListCategories(res.data.meals);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
     getData();
   }, [name]);
 
   useEffect(() => {
     async function getDataFavorites() {
-      const responseFavorites = await axios.get(
-        `http://localhost:8080/api/v1/user/${username}/favorites`,
-        {
-          headers: { "Authorization" : `Bearer ${token}` }
-        }
-      );
-      setFavoriteMeals(responseFavorites.data);   
+      await axios
+        .get(`http://localhost:8080/api/v1/user/${username}/favorites`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          setFavoriteMeals(res.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
     getDataFavorites();
-  }, []);
+  }, [username, token]);
 
-  const listIds = []
+  const listIds = [];
+
   for (let favoriteMeal of favoriteMeals) {
     listIds.push(favoriteMeal.idMeal);
   }
-  console.log(listIds);
 
   const faveClick = (newFavoriteMeal) => {
+    console.log("add fav");
     let alreadyFave = false;
     for (let item of favoriteMeals) {
       if (item.idMeal === newFavoriteMeal.idMeal) {
@@ -49,32 +59,61 @@ function MealListByCategory({ name }) {
       }
     }
 
-    if (alreadyFave == false) {
-      fetch(
-        `http://localhost:8080/api/v1/user/${username}/favorites/${newFavoriteMeal.idMeal}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json",
-          "Authorization" : `Bearer ${token}` 
+    if (alreadyFave === false) {
+      const favoriteMeal = {
+        idMeal: newFavoriteMeal.idMeal,
+        name: newFavoriteMeal.strMeal,
+        image: newFavoriteMeal.strMealThumb,
+      };
+      fetch(`http://localhost:8080/api/v1/user/${username}/favorites`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-          body: JSON.stringify(newFavoriteMeal),
-        }
-      ).then((response) => {
-        console.log(response);
+        body: JSON.stringify(favoriteMeal),
+      }).then((response) => {
+        console.log("add to db");
       });
     } else {
       fetch(
         `http://localhost:8080/api/v1/user/${username}/favorites/delete/${newFavoriteMeal.idMeal}`,
         {
           method: "DELETE",
-          headers: { 
+          headers: {
             "Content-Type": "application/json",
-            "Authorization" : `Bearer ${token}` 
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
-      )
+      );
     }
     window.location.reload();
+  };
+
+  const handleAddMealToCart = (item) => {
+    let mealData = {
+      username: username,
+      mealName: item.strMeal,
+      image: item.strMealThumb.replace(
+        "https://www.themealdb.com/images/media/meals/",
+        ""
+      ),
+    };
+    if (username) {
+      addMealToUserCart({ params: mealData, token: token })
+        .then((res) => {
+          if (res.status === 200) {
+            setToastBody(item.strMeal + " Add to cart");
+            setToast(true);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else {
+      setToastBody("ERROR try Login to order");
+      setToast(true);
+    }
   };
 
   return (
@@ -88,7 +127,7 @@ function MealListByCategory({ name }) {
           <img
             className="card-img-top cardImg"
             src={item.strMealThumb}
-            alt="Card image cap"
+            alt="Card cap"
           />
           <div className="card-body">
             <h5 className="card-title">{item.strMeal.substring(0, 20)}</h5>
@@ -98,48 +137,61 @@ function MealListByCategory({ name }) {
               onClick={() => faveClick(item)}
             >
               <h5>
-                { listIds.includes(item.idMeal) ? <FaHeart style={{ color: "red" }} /> : <FaHeart style={{ color: "blue" }} /> }
+                {listIds.includes(item.idMeal) ? (
+                  <FaHeart style={{ color: "red" }} />
+                ) : (
+                  <FaHeart style={{ color: "blue" }} />
+                )}
               </h5>
             </button>{" "}
             <Link to={`/food-details/${item.idMeal}`}>
-              <button type="button" value="submit" className="btn btn-info">
+              <button type="button" value="submit" className="btn btn-link">
                 Info
               </button>{" "}
             </Link>
-            <a
-              href="#"
-              onClick={() => handleClick(item)}
-              className="btn btn-primary"
+            <button
+              onClick={() => handleAddMealToCart(item)}
+              className="btn btn-light"
             >
-              🛒
-            </a>
+              <span role="img" aria-label="cart">
+                🛒
+              </span>
+            </button>
           </div>
         </div>
       ))}
+      <Toast
+        style={{
+          position: "fixed",
+          top: 0,
+          left: "39%",
+        }}
+        onClose={() => setToast(false)}
+        show={toast}
+        delay={3000}
+        autohide
+      >
+        <Toast.Header>
+          <img src="holder.js/20x20?text=%20" className="rounded mr-2" alt="" />
+          <strong className="mr-auto">Message</strong>
+        </Toast.Header>
+        <Toast.Body>{toastBody}</Toast.Body>
+      </Toast>
     </div>
   );
 }
 
-function handleClick(mealToAddToCart) {
-  const username = window.sessionStorage.getItem("User");
-  const token = window.sessionStorage.getItem("token");
-  const image = mealToAddToCart.strMealThumb.replace(
-    "https://www.themealdb.com/images/media/meals/",
-    ""
-  );
-  fetch(
-    `http://localhost:8080/api/v1/cart/${username}/meal/${mealToAddToCart.strMeal}/tocart/${image}`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization" : `Bearer ${token}`
-      },
-      body: JSON.stringify(mealToAddToCart),
-    }
-  ).then((response) => {
-    console.log(response);
-  });
-}
-
 export default MealListByCategory;
+
+async function addMealToUserCart({ params, token }) {
+  try {
+    const dataResponse = await axios.post(
+      "http://localhost:8080/api/v1/cart/meal",
+      params,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    return dataResponse;
+  } catch (error) {
+    console.error(error);
+  }
+}
