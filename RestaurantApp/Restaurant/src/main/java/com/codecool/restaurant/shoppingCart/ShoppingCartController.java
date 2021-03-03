@@ -27,46 +27,34 @@ public class ShoppingCartController {
         this.mealsToCartService = mealsToCartService;
     }
 
-//    @PostMapping(path = "{username}/meal/{mealName}/tocart/{image}")
-//    public void addMealToDB(@PathVariable("username") String username, @PathVariable("mealName") String mealName, @PathVariable("image") String image){
-//
-//        if (mealService.findByName(mealName) != null) {
-//            mealsToCartService.updateQuantity(mealService.findByName(mealName));
-//        } else {
-//            Meal meal = new Meal(mealName, "https://www.themealdb.com/images/media/meals/" + image);
-//            mealService.addMeal(meal);
-//            User user = userService.getUserByUsername(username);
-//            ShoppingCart cart = shoppingCartService.getCartByUser(user);
-//            mealsToCartService.addMealsToCart(new MealsToCart(cart, meal));
-//        }
-//    }
-@PostMapping("/meal")
-public void addMealToDB(@Valid @RequestBody AddMealToCart addMealToCart){
-    if (mealService.findByName(addMealToCart.getMealName()) != null) {
-        mealsToCartService.updateQuantity(mealService.findByName(addMealToCart.getMealName()));
-    } else {
-        Meal meal = new Meal(addMealToCart.getMealName(), "https://www.themealdb.com/images/media/meals/" + addMealToCart.getImage());
-        mealService.addMeal(meal);
-        User user = userService.getUserByUsername(addMealToCart.getUsername());
-        ShoppingCart cart = shoppingCartService.getCartByUser(user);
-        mealsToCartService.addMealsToCart(new MealsToCart(cart, meal));
+    @PostMapping("/meal")
+    public void addMealToDB(@Valid @RequestBody AddMealToCart addMealToCart) {
+        if (mealService.findByName(addMealToCart.getMealName()) != null) {
+            mealsToCartService.updateQuantity(mealService.findByName(addMealToCart.getMealName()));
+        } else {
+            Meal meal = new Meal(addMealToCart.getMealName(), "https://www.themealdb.com/images/media/meals/" + addMealToCart.getImage());
+            mealService.addMeal(meal);
+            User user = userService.getUserByUsername(addMealToCart.getUsername());
+            ShoppingCart cart = shoppingCartService.getCartByUser(user);
+            mealsToCartService.addMealsToCart(new MealsToCart(cart, meal));
+        }
     }
-}
 
-    @GetMapping(path="mealsInCart/{id}")
-    public Map<Meal, Integer> getAllMealInCart(@PathVariable("id") Long id){
+    @GetMapping(path = "mealsInCart/{id}")
+    public Map<Meal, Integer> getAllMealInCart(@PathVariable("id") Long id) {
         ShoppingCart cart = shoppingCartService.getCartById(id);
         List<MealsToCart> list = mealsToCartService.getAllMealsByCart(cart);
         Map<Meal, Integer> listOfMeals = new HashMap<>();
-        for (MealsToCart meal: list) {
-            listOfMeals.put(meal.getMeal(),meal.getQuantity());
+        for (MealsToCart meal : list) {
+            listOfMeals.put(meal.getMeal(), meal.getQuantity());
         }
         return listOfMeals;
     }
 
-    @GetMapping(path="view/{username}")
-    public long getCartIdByUserName(@PathVariable("username") String username){
-          User user = userService.getUserByUsername(username);
-          return shoppingCartService.getCartByUser(user).getId();
+
+    @GetMapping(path = "view/{username}")
+    public long getCartIdByUserName(@PathVariable("username") String username) {
+        User user = userService.getUserByUsername(username);
+        return shoppingCartService.getCartByUser(user).getId();
     }
 }
