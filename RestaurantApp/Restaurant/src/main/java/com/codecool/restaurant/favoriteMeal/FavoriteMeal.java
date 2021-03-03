@@ -1,11 +1,7 @@
 package com.codecool.restaurant.favoriteMeal;
 
-import com.codecool.restaurant.user.User;
 import lombok.*;
-
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor

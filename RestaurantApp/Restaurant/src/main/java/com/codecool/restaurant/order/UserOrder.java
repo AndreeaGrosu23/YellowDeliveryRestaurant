@@ -26,7 +26,7 @@ public class UserOrder {
     private Date date;
 
     @ManyToOne
-    @JoinColumn(name="userApp_id")
+    @JoinColumn(name="user_id")
     private User user;
 
     public UserOrder(String status, Double totalPrice, User user) {

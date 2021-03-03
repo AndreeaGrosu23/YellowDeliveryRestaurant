@@ -8,7 +8,6 @@ import com.codecool.restaurant.user.User;
 import com.codecool.restaurant.user.UserService;
 import com.codecool.restaurant.order.UserOrder;
 import com.codecool.restaurant.order.UserOrderRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -25,7 +24,6 @@ public class PaymentService {
 
     private final RestTemplate restTemplate;
 
-//    @Autowired
     public PaymentService(MealsToCartService mealsToCartService, UserService userService, ShoppingCartService shoppingCartService, UserOrderRepository userOrderRepository, RestTemplate restTemplate) {
         this.mealsToCartService = mealsToCartService;
         this.userService = userService;

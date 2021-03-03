@@ -1,6 +1,6 @@
 package com.codecool.restaurant.user;
 
 public enum TypeUserRole {
-    USER,
-    ADMIN
+    ROLE_USER,
+    ROLE_ADMIN
 }
