@@ -32,6 +32,5 @@ public class Meal {
                 "\"name\": \"" +name+ "\"," +
                 "\"image\": \"" + image + "\"," +
                 "\"price\": "+ price + "}";
-
     }
 }

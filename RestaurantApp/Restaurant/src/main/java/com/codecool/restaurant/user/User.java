@@ -57,6 +57,7 @@ public class User {
     private String password;
 
     // roles of the user (ADMIN, USER,..)
+//    @Enumerated(EnumType.STRING)
     private String userRole= "ROLE_USER";
 
 //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

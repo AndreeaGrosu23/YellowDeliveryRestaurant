@@ -1,5 +1,6 @@
 package com.codecool.restaurant.security;
 
+import com.codecool.restaurant.user.TypeUserRole;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
