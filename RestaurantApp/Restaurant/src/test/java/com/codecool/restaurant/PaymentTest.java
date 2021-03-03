@@ -11,8 +11,6 @@ import com.codecool.restaurant.order.UserOrderRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
