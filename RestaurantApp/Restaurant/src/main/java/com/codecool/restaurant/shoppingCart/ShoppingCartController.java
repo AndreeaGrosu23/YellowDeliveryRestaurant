@@ -8,6 +8,7 @@ import com.codecool.restaurant.user.User;
 import com.codecool.restaurant.user.UserService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.*;
 
 @RequestMapping("api/v1/cart")
@@ -26,19 +27,31 @@ public class ShoppingCartController {
         this.mealsToCartService = mealsToCartService;
     }
 
-    @PostMapping(path = "{username}/meal/{mealName}/tocart/{image}")
-    public void addMealToDB(@PathVariable("username") String username, @PathVariable("mealName") String mealName, @PathVariable("image") String image){
-
-        if (mealService.findByName(mealName) != null) {
-            mealsToCartService.updateQuantity(mealService.findByName(mealName));
-        } else {
-            Meal meal = new Meal(mealName, "https://www.themealdb.com/images/media/meals/" + image);
-            mealService.addMeal(meal);
-            User user = userService.getUserByUsername(username);
-            ShoppingCart cart = shoppingCartService.getCartByUser(user);
-            mealsToCartService.addMealsToCart(new MealsToCart(cart, meal));
-        }
+//    @PostMapping(path = "{username}/meal/{mealName}/tocart/{image}")
+//    public void addMealToDB(@PathVariable("username") String username, @PathVariable("mealName") String mealName, @PathVariable("image") String image){
+//
+//        if (mealService.findByName(mealName) != null) {
+//            mealsToCartService.updateQuantity(mealService.findByName(mealName));
+//        } else {
+//            Meal meal = new Meal(mealName, "https://www.themealdb.com/images/media/meals/" + image);
+//            mealService.addMeal(meal);
+//            User user = userService.getUserByUsername(username);
+//            ShoppingCart cart = shoppingCartService.getCartByUser(user);
+//            mealsToCartService.addMealsToCart(new MealsToCart(cart, meal));
+//        }
+//    }
+@PostMapping("/meal")
+public void addMealToDB(@Valid @RequestBody AddMealToCart addMealToCart){
+    if (mealService.findByName(addMealToCart.getMealName()) != null) {
+        mealsToCartService.updateQuantity(mealService.findByName(addMealToCart.getMealName()));
+    } else {
+        Meal meal = new Meal(addMealToCart.getMealName(), "https://www.themealdb.com/images/media/meals/" + addMealToCart.getImage());
+        mealService.addMeal(meal);
+        User user = userService.getUserByUsername(addMealToCart.getUsername());
+        ShoppingCart cart = shoppingCartService.getCartByUser(user);
+        mealsToCartService.addMealsToCart(new MealsToCart(cart, meal));
     }
+}
 
     @GetMapping(path="mealsInCart/{id}")
     public Map<Meal, Integer> getAllMealInCart(@PathVariable("id") Long id){
