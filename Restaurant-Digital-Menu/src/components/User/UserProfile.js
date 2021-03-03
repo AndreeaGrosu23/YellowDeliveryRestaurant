@@ -79,7 +79,7 @@ export default function UserProfile() {
 
   return (
     <div style={{ marginBottom: "25rem" }}>
-      {toHome ? <Redirect to="/" /> : null}
+      {toHome || userName === null ? <Redirect to="/" /> : null}
       <div className="container rounded bg-white mt-5">
         <div className="row">
           <div className="col-md-4 border-right">
