@@ -32,7 +32,6 @@ function App() {
           <div>
             <Switch>
               <Route path="/categories" exact component={FoodCategories} />
-              <Route path="/" exact component={AllMeals} />
               <Route
                 path="/categories/:name"
                 render={(e) => (
@@ -73,6 +72,7 @@ function App() {
                 exact
                 component={PaymentCancel}
               ></Route>
+              <Route path="/" exact component={AllMeals} />
               <Route exact path="/error" component={GenericErrorPage} />
               <Route component={GenericErrorPage} />
             </Switch>

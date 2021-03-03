@@ -9,64 +9,66 @@ export default function FavoriteMeals() {
 
   useEffect(() => {
     async function getData() {
-      const response = await axios.get(
-        `http://localhost:8080/api/v1/user/${username}/favorites`,
-        {
-          headers: { "Authorization" : `Bearer ${token}` }
-        }
-      );
-      setFavoriteMeals(response.data);
-      console.log(response.data);
+      await axios
+        .get(`http://localhost:8080/api/v1/user/${username}/favorites`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          setFavoriteMeals(res.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
     getData();
-  }, []);
+  }, [token, username]);
 
   return (
     <div
       style={{ marginBottom: "50rem" }}
       className="container FoodCategoriesContainer"
     >
-
-      { favoriteMeals.length === 0 ? 
+      {favoriteMeals.length === 0 ? (
         <div style={{ color: "white" }}>
-          <h3>No favorite meals</h3> 
-        </div> 
-      : 
+          <h3>No favorite meals</h3>
+        </div>
+      ) : (
         <div>
           <div style={{ color: "white" }}>
-            <h3>Favorite meals</h3> 
+            <h3>Favorite meals</h3>
           </div>
           {favoriteMeals.map((item, i) => (
             <div
               key={i}
-            className="card FoodCategoriesCard"
-            style={{ width: "18rem", display: "inline-block" }}
+              className="card FoodCategoriesCard"
+              style={{ width: "18rem", display: "inline-block" }}
             >
-            <img
-              className="card-img-top cardImg"
-              src={item.image}
-              alt="Card cap"
-            />
-            <div className="card-body">
-              <h5 className="card-title">{item.name.substring(0, 20)}</h5>
-              <Link to={`/food-details/${item.idMeal}`}>
-                <button type="button" value="submit" className="btn btn-info">
-                  Info
-                </button>{" "}
-              </Link>
-              <a
-                href="#"
-                onClick={() => handleClick(item)}
-                className="btn btn-primary"
-              >
-                🛒
-              </a>
+              <img
+                className="card-img-top cardImg"
+                src={item.image}
+                alt="Card cap"
+              />
+              <div className="card-body">
+                <h5 className="card-title">{item.name.substring(0, 20)}</h5>
+                <Link to={`/food-details/${item.idMeal}`}>
+                  <button type="button" value="submit" className="btn btn-link">
+                    Info
+                  </button>{" "}
+                </Link>
+
+                <button
+                  onClick={() => handleClick(item)}
+                  className="btn btn-light"
+                >
+                  <span role="img" aria-label="cart">
+                    🛒
+                  </span>
+                </button>
+              </div>
             </div>
-          </div>
           ))}
         </div>
-      }
-
+      )}
     </div>
   );
 }
@@ -84,7 +86,7 @@ function handleClick(mealToAddToCart) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization" : `Bearer ${token}` 
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(mealToAddToCart),
     }

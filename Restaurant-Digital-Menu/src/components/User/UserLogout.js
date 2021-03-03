@@ -7,7 +7,7 @@ function UserLogout() {
   const doLogout = () => {
     handleLogout()
       .then((res) => {
-        console.log(res);
+        
         window.sessionStorage.clear();
         history.push("/surprise-meal");
       })

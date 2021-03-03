@@ -13,7 +13,6 @@ export default function UserProfile() {
   const token = window.sessionStorage.getItem("token");
 
   const userName = window.sessionStorage.getItem("User");
- 
 
   const [user, setUser] = useState([]);
   const [toHome, setToHome] = useState();
@@ -23,32 +22,33 @@ export default function UserProfile() {
 
   useEffect(() => {
     async function getData() {
-      const response = await axios.get(
-        `http://localhost:8080/api/v1/user/view/${userName}`,
+      await axios
+        .get(
+          `http://localhost:8080/api/v1/user/view/${userName}`,
 
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      setUser(response.data);
-      console.log(response.data);
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        )
+        .then((res) => {
+          setUser(res.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
     getData();
-  }, []);
+  }, [token, userName]);
 
   const onSubmit = (data) => {
-    console.log(data);
-    fetch(
-      `http://localhost:8080/api/v1/user/${userName}/edit`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(data),
-      }
-    ).then((response) => {
+    fetch(`http://localhost:8080/api/v1/user/${userName}/edit`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    }).then((response) => {
       if (response.status === 200) {
         handleShow();
       }
@@ -118,8 +118,8 @@ export default function UserProfile() {
               </div>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="row mt-2">
-                  <div className="col-md-6">                   
-                    <label>First Name</label> 
+                  <div className="col-md-6">
+                    <label>First Name</label>
                     <input
                       type="text"
                       className="form-control"
@@ -147,9 +147,9 @@ export default function UserProfile() {
                     <input
                       type="email"
                       className="form-control"
-                      placeholder={user.emailAddress}
+                      defaultValue={user.emailAddress}
                       name="emailAddress"
-                      disabled="true"
+                      disabled={true}
                     />
                   </div>
                   <div className="col-md-6">
@@ -157,9 +157,9 @@ export default function UserProfile() {
                     <input
                       type="text"
                       className="form-control"
-                      value={user.userName}
+                      defaultValue={user.userName}
                       name="userName"
-                      disabled="true"
+                      disabled={true}
                     />
                   </div>
                 </div>

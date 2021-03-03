@@ -34,7 +34,6 @@ function FoodCategories() {
 
     for (let index = 0; index < foodCategories.length; index++) {
       if (foodCategories[index].idCategory === id) {
-        console.log("object");
         foodCategories[index].showMoreDetails = !foodCategories[index]
           .showMoreDetails;
       }

@@ -14,7 +14,7 @@ function GenericErrorPage() {
   };
 
   return (
-    <div style={{ color: "white" }} classNam="App-header">
+    <div style={{ color: "white" }} className="App-header">
       <div></div>
       <h2>Error:</h2>
       <h3>{errorMessage()}</h3>

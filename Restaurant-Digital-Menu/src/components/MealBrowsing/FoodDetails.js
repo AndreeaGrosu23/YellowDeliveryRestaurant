@@ -32,7 +32,7 @@ function FoodDetails({ id }) {
           <img
             className="card-img-top"
             src={foodDetails.strMealThumb}
-            alt="Card image cap"
+            alt="Card cap"
           />
         </div>
         <div className="card-body">

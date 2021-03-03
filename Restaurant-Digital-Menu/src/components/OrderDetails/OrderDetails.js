@@ -45,7 +45,7 @@ function OrderDetails({ name }) {
     for (let [mealJSON, quantity] of Object.entries(mapWithMeals)) {
       meal = JSON.parse(mealJSON);
       content.push(
-        <tr>
+        <tr key={meal.id}>
           <td>{meal.name}</td>
           <td>{quantity}</td>
           <td>{meal.price * quantity} $</td>
@@ -140,11 +140,11 @@ function OrderDetails({ name }) {
 export default OrderDetails;
 
 async function doPayment(params) {
-  console.log(params);
+ 
   axios
     .post("http://localhost:8080/payment/request-payment", params)
     .then((response) => {
-      console.log(response);
+      
       if (response.status === 200) {
         window.location.href = response.data;
       }
