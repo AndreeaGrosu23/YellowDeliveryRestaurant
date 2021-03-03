@@ -6,6 +6,7 @@ import com.codecool.restaurant.meal.MealsToCart;
 import com.codecool.restaurant.meal.MealsToCartService;
 import com.codecool.restaurant.user.User;
 import com.codecool.restaurant.user.UserService;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,7 +28,7 @@ public class ShoppingCartController {
         this.mealsToCartService = mealsToCartService;
     }
 
-    @PostMapping("/meal")
+    @PostMapping
     public void addMealToDB(@Valid @RequestBody AddMealToCart addMealToCart) {
         if (mealService.findByName(addMealToCart.getMealName()) != null) {
             mealsToCartService.updateQuantity(mealService.findByName(addMealToCart.getMealName()));
@@ -49,6 +50,37 @@ public class ShoppingCartController {
             listOfMeals.put(meal.getMeal(), meal.getQuantity());
         }
         return listOfMeals;
+    }
+
+    @GetMapping
+    public List< MealInCartRequest> getCartMeals(Authentication authentication){
+        String authenticationName = authentication.getName();
+        User user = userService.getUserByUsername(authenticationName);
+        ShoppingCart cartByUser = shoppingCartService.getCartByUser(user);
+        return mealsToCartService.mealsInCart(cartByUser);
+    }
+
+    @PutMapping
+    public void updateQtyMealInCart(@RequestBody MealInCartRequest meal){
+        mealsToCartService.changeQtyMealInCart(meal);
+    }
+
+    @GetMapping("/order-details")
+    public OrderDetailsRequest getOrderDetails(Authentication authentication){
+        String authenticationName = authentication.getName();
+        User user = userService.getUserByUsername(authenticationName);
+        List<MealInCartRequest> cartProducts = getCartMeals(authentication);
+
+        OrderDetailsRequest orderDetailsRequest = new OrderDetailsRequest();
+
+        orderDetailsRequest.setMeals(cartProducts);
+        orderDetailsRequest.setUserDeliveryAddress(user.getDeliveryAddress());
+        orderDetailsRequest.setUserEmailAddress(user.getEmailAddress());
+        orderDetailsRequest.setUserFirstName(user.getFirstName());
+        orderDetailsRequest.setUserLastName(user.getLastName());
+        orderDetailsRequest.setUserPhoneNumber(user.getPhoneNumber());
+
+        return orderDetailsRequest;
     }
 
 
