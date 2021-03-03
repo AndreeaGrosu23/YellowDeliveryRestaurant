@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { Redirect } from "react-router";
 import { Button, Modal } from "react-bootstrap";
 import "../MealBrowsing/FoodCategories.css"; 
 
 export default function UserSignUp() {
-  const { register, handleSubmit, errors } = useForm();
+  const { register, handleSubmit, watch, errors } = useForm();
   const [toHome, setToHome] = useState();
   const [show, setShow] = useState(false);
+  const password = useRef({});
+  password.current = watch("password", "");
 
   const onSubmit = (data) => {
     fetch(" http://localhost:8080/api/v1/user", {
@@ -104,11 +106,19 @@ export default function UserSignUp() {
               type="password"
               name="confirmPassword"
               placeholder="Confirm password"
-              ref={register}
+              ref={register({
+                
+                validate: value => {
+                  return value === password.current || "Passwords do not match"
+                }
+              })}
               className="form-control"
               id="confirm-password"
               required="required"
             />
+            {errors.confirmPassword && (
+              <small className="text-danger">{errors.confirmPassword.message}</small>
+            )}
           </div>
           <input type="submit" className="btn btn-primary" />
         </form>
