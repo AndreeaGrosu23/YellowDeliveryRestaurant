@@ -8,7 +8,7 @@ import { faEye } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 
 export default function UserLogin() {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, errors } = useForm();
   const [userLogin, setUserLogin] = useState(false);
   // Pop-up Alert
   const [show, setShow] = useState(false);
@@ -80,23 +80,33 @@ export default function UserLogin() {
             <input
               name="username"
               placeholder="username"
-              ref={register({ required: "This is required." })}
+              ref={register({
+                required: { message: "This field is mandatory", value: true },
+                minLength: { message: "Minim 4 characters", value: 4 },
+              })}
               type="text"
               className="form-control"
               id="user-name"
-              required="required"
             />
+            {errors.username && (
+              <small className="text-danger">{errors.username.message}</small>
+            )}
           </div>
           <div className="form-group">
             <input
               type={passwordShown ? "text" : "password"}
               name="password"
-              ref={register({ required: "This is required." })}
+              ref={register({
+                required: { message: "This field is mandatory", value: true },
+                minLength: { message: "Minim 4 characters", value: 4 },
+              })}
               placeholder="Password"
               className="form-control"
               id="password"
-              required="required"
             />
+            {errors.password && (
+              <small className="text-danger">{errors.password.message}</small>
+            )}
             <br></br>
             <h6 style={{ color: "white" }}>
               <i style={{ color: "white" }} onClick={togglePasswordVisiblity}>
