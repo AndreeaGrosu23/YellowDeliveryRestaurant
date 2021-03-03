@@ -22,4 +22,6 @@ public interface MealsToCartRepository extends JpaRepository<MealsToCart, Long> 
     @Modifying(clearAutomatically = true)
     @Query(value="DELETE FROM MealsToCart mc where mc.shoppingCart=:shoppingCart")
     void deleteByShoppingCart(ShoppingCart shoppingCart);
+
+
 }

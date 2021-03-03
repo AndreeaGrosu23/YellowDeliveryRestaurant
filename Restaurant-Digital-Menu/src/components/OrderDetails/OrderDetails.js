@@ -140,11 +140,9 @@ function OrderDetails({ name }) {
 export default OrderDetails;
 
 async function doPayment(params) {
- 
   axios
     .post("http://localhost:8080/payment/request-payment", params)
     .then((response) => {
-      
       if (response.status === 200) {
         window.location.href = response.data;
       }

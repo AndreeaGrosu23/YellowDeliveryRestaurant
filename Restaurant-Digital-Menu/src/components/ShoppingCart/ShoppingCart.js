@@ -80,12 +80,13 @@ function ShoppingCart() {
         <p style={{ fontSize: "50px", color: "yellow" }}>
           TOTAL PRICE: {listOfMeals && getTotalPrice(listOfMeals)}$
         </p>
-
-        <Link to={`/order-details/${cartId}`}>
-          <button type="button" value="submit" className="btn btn-info">
-            Checkout
-          </button>{" "}
-        </Link>
+        {getTotalPrice(listOfMeals) > 0 && (
+          <Link to={`/order-details/${cartId}`}>
+            <button type="button" className="btn btn-info">
+              Checkout
+            </button>{" "}
+          </Link>
+        )}
       </div>
     </div>
   );

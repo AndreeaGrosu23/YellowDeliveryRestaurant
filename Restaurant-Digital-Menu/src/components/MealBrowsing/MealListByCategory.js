@@ -3,7 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { FaHeart } from "react-icons/fa";
 import "./FoodCategories.css";
-import Toast from "react-bootstrap/Toast";
+import ToastMessage from "../Toast/ToastMessage";
 
 function MealListByCategory({ name }) {
   const [foodListCategories, setFoodListCategories] = useState([]);
@@ -51,43 +51,48 @@ function MealListByCategory({ name }) {
   }
 
   const faveClick = (newFavoriteMeal) => {
-    console.log("add fav");
-    let alreadyFave = false;
-    for (let item of favoriteMeals) {
-      if (item.idMeal === newFavoriteMeal.idMeal) {
-        alreadyFave = true;
+    if (username) {
+      let alreadyFave = false;
+      for (let item of favoriteMeals) {
+        if (item.idMeal === newFavoriteMeal.idMeal) {
+          alreadyFave = true;
+        }
       }
-    }
 
-    if (alreadyFave === false) {
-      const favoriteMeal = {
-        idMeal: newFavoriteMeal.idMeal,
-        name: newFavoriteMeal.strMeal,
-        image: newFavoriteMeal.strMealThumb,
-      };
-      fetch(`http://localhost:8080/api/v1/user/${username}/favorites`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(favoriteMeal),
-      }).then((response) => {
-        console.log("add to db");
-      });
-    } else {
-      fetch(
-        `http://localhost:8080/api/v1/user/${username}/favorites/delete/${newFavoriteMeal.idMeal}`,
-        {
-          method: "DELETE",
+      if (alreadyFave === false) {
+        const favoriteMeal = {
+          idMeal: newFavoriteMeal.idMeal,
+          name: newFavoriteMeal.strMeal,
+          image: newFavoriteMeal.strMealThumb,
+        };
+        fetch(`http://localhost:8080/api/v1/user/${username}/favorites`, {
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-        }
-      );
+          body: JSON.stringify(favoriteMeal),
+        }).then((response) => {
+          console.log("add to db");
+        });
+      } else {
+        fetch(
+          `http://localhost:8080/api/v1/user/${username}/favorites/delete/${newFavoriteMeal.idMeal}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      }
+
+      window.location.reload();
+    } else {
+      setToastBody("ERROR try Login to favorite");
+      setToast(true);
     }
-    window.location.reload();
   };
 
   const handleAddMealToCart = (item) => {
@@ -103,7 +108,7 @@ function MealListByCategory({ name }) {
       addMealToUserCart({ params: mealData, token: token })
         .then((res) => {
           if (res.status === 200) {
-            setToastBody(item.strMeal + " Add to cart");
+            setToastBody(mealData.mealName + " Add to cart");
             setToast(true);
           }
         })
@@ -160,23 +165,7 @@ function MealListByCategory({ name }) {
           </div>
         </div>
       ))}
-      <Toast
-        style={{
-          position: "fixed",
-          top: 0,
-          left: "39%",
-        }}
-        onClose={() => setToast(false)}
-        show={toast}
-        delay={3000}
-        autohide
-      >
-        <Toast.Header>
-          <img src="holder.js/20x20?text=%20" className="rounded mr-2" alt="" />
-          <strong className="mr-auto">Message</strong>
-        </Toast.Header>
-        <Toast.Body>{toastBody}</Toast.Body>
-      </Toast>
+      <ToastMessage toast={toast} setToast={setToast} toastBody={toastBody} />
     </div>
   );
 }

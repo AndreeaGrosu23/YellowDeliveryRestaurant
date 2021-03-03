@@ -1,10 +1,12 @@
 package com.codecool.restaurant.meal;
 
+import com.codecool.restaurant.exception.NoDataFoundException;
 import com.codecool.restaurant.shoppingCart.ShoppingCart;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MealsToCartService {
@@ -36,4 +38,6 @@ public class MealsToCartService {
     public void clearCart(ShoppingCart shoppingCart) {
         mealsToCartRepository.deleteByShoppingCart(shoppingCart);
     }
+
+
 }
