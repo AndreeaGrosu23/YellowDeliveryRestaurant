@@ -97,12 +97,11 @@ function MealListByCategory({ name }) {
 
   const handleAddMealToCart = (item) => {
     let mealData = {
-      username: username,
       mealName: item.strMeal,
-      image: item.strMealThumb.replace(
-        "https://www.themealdb.com/images/media/meals/",
-        ""
-      ),
+      mealImage: item.strMealThumb,
+      mealPrice: 5.0,
+      quantity: 1,
+      idMeal: item.idMeal,
     };
     if (username) {
       addMealToUserCart({ params: mealData, token: token })

@@ -3,11 +3,13 @@ package com.example.paymentservice.payment;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/payment")
+@Slf4j
 public class PaypalController {
 
     private final PaypalService service;
@@ -23,7 +25,7 @@ public class PaypalController {
 
     @PostMapping()
     public PaypalOrderModel payment(@RequestBody PaypalOrderModel paypalOrderModel) {
-        System.out.println("MicroService");
+        log.info("MicroService");
         try {
             Payment payment = service.createPayment(paypalOrderModel.getTotalAmount(), paypalOrderModel.getDescription(), CANCEL_URL,
                     SUCCESS_URL);

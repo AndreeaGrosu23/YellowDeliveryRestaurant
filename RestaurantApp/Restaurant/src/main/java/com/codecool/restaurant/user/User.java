@@ -1,7 +1,6 @@
 package com.codecool.restaurant.user;
 
 import com.codecool.restaurant.favoriteMeal.FavoriteMeal;
-import com.codecool.restaurant.order.UserOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -11,11 +10,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -57,11 +53,7 @@ public class User {
     private String password;
 
     // roles of the user (ADMIN, USER,..)
-//    @Enumerated(EnumType.STRING)
     private String userRole= "ROLE_USER";
-
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<UserOrder> userOrders = new ArrayList<>();
 
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(

@@ -1,7 +1,6 @@
 package com.codecool.restaurant.payment;
 
 import com.codecool.restaurant.payment.common.PaypalOrderModel;
-import com.codecool.restaurant.exception.ShoppingCartException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
