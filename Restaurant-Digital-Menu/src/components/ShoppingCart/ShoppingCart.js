@@ -37,12 +37,13 @@ function ShoppingCart() {
     return sum;
   };
 
-  const handelChangeQty = ({ meal, modification }) => {
+  const handleChangeQty = ({ meal, modification }) => {
     let newQty = meal.quantity + modification;
     let data = {
       mealInCartId: meal.mealInCartId,
       quantity: newQty,
     };
+
     changeMealQty({ params: data, token: token }).then(() => {
       setReload(true);
     });
@@ -54,52 +55,58 @@ function ShoppingCart() {
       style={{ marginBottom: "40rem" }}
     >
       <h1 style={{ color: "white" }}>Cart</h1>
-      {listOfMeals ? (
-        listOfMeals.map((item) => (
-          <div className="card FoodCategoriesCard" key={item.mealInCartId}>
-            <Card.Img
-              className="card-img-top cardImg"
-              variant="top"
-              src={item.mealImage}
-            />
-            <Card.Body>
-              <Card.Title>{item.mealName}</Card.Title>
-              <Card.Text>{item.quantity} Qty</Card.Text>
-              <button
-                className="btn btn-light"
-                onClick={() => handelChangeQty({ meal: item, modification: 1 })}
-              >
-                <span role="img" aria-label="up">
-                  👍
-                </span>
-              </button>
-              <button
-                className="btn btn-light"
-                onClick={() =>
-                  handelChangeQty({ meal: item, modification: -1 })
-                }
-              >
-                <span role="img" aria-label="down">
-                  👎
-                </span>
-              </button>
-              <Card.Text>{item.mealPrice * item.quantity}$</Card.Text>
-            </Card.Body>
-          </div>
-        ))
+      {listOfMeals.length
+        ? listOfMeals.map((item) => (
+            <div className="card FoodCategoriesCard" key={item.mealInCartId}>
+              <Card.Img
+                className="card-img-top cardImg"
+                variant="top"
+                src={item.mealImage}
+              />
+              <Card.Body>
+                <Card.Title>{item.mealName}</Card.Title>
+                <Card.Text>{item.quantity} Qty</Card.Text>
+                <button
+                  className="btn btn-light"
+                  onClick={() =>
+                    handleChangeQty({ meal: item, modification: 1 })
+                  }
+                >
+                  <span role="img" aria-label="up">
+                    ➕
+                  </span>
+                </button>
+                <button
+                  className="btn btn-light"
+                  onClick={() =>
+                    handleChangeQty({ meal: item, modification: -1 })
+                  }
+                >
+                  <span role="img" aria-label="down">
+                    ➖
+                  </span>
+                </button>
+                <Card.Text>{item.mealPrice * item.quantity}$</Card.Text>
+              </Card.Body>
+            </div>
+          ))
+        : null}
+
+      {listOfMeals.length ? (
+        <div>
+          <p style={{ fontSize: "50px", color: "yellow" }}>
+            TOTAL PRICE: {getTotalPrice(listOfMeals)}$
+          </p>
+
+          <Link to={`/order-details/`}>
+            <button type="button" className="btn btn-info">
+              Checkout
+            </button>{" "}
+          </Link>
+        </div>
       ) : (
         <p style={{ fontSize: "50px", color: "yellow" }}>No meals in cart</p>
       )}
-      <div>
-        <p style={{ fontSize: "50px", color: "yellow" }}>
-          TOTAL PRICE: {getTotalPrice(listOfMeals)}$
-        </p>
-        <Link to={`/order-details/`}>
-          <button type="button" className="btn btn-info">
-            Checkout
-          </button>{" "}
-        </Link>
-      </div>
     </div>
   );
 }

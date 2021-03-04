@@ -64,7 +64,7 @@ export default function UserLogin() {
           </Modal>
         </>
       </div>
-      {userLogin && <Redirect to="/" />}
+      {userLogin && <Redirect to="/categories" />}
       <div
         className="   LoginContainer "
         style={{
