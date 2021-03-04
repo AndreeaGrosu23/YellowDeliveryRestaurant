@@ -28,12 +28,11 @@ export default function FavoriteMeals() {
   }, [token, username]);
   const handleAddMealToCart = (item) => {
     let mealData = {
-      username: username,
-      mealName: item.name,
-      image: item.image.replace(
-        "https://www.themealdb.com/images/media/meals/",
-        ""
-      ),
+      mealName: item.strMeal,
+      mealImage: item.strMealThumb,
+      mealPrice: 5.0,
+      quantity: 1,
+      idMeal: item.idMeal,
     };
     if (username) {
       addMealToUserCart({ params: mealData, token: token })

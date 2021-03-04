@@ -13,7 +13,6 @@ export default function UserProfile() {
   const userName = window.sessionStorage.getItem("User");
 
   const [user, setUser] = useState([]);
-  const [toHome, setToHome] = useState();
   const [show, setShow] = useState(false);
 
   const history = useHistory();
@@ -77,7 +76,7 @@ export default function UserProfile() {
 
   return (
     <div style={{ marginBottom: "25rem" }}>
-      {toHome || userName === null ? <Redirect to="/" /> : null}
+      {userName === null ? <Redirect to="/" /> : null}
       <div className="container rounded bg-white mt-5">
         <div className="row">
           <div className="col-md-4 border-right">
