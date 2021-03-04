@@ -1,10 +1,7 @@
-package com.codecool.restaurant.meal;
+package com.codecool.restaurant.shoppingCart;
 
 import com.codecool.restaurant.exception.NoDataFoundException;
-import com.codecool.restaurant.shoppingCart.ShoppingCartService;
-import com.codecool.restaurant.shoppingCart.payload.AddMealToCartDTO;
 import com.codecool.restaurant.shoppingCart.payload.MealInCartDTO;
-import com.codecool.restaurant.shoppingCart.ShoppingCart;
 import com.codecool.restaurant.shoppingCart.payload.OrderDetailsDTO;
 import com.codecool.restaurant.user.User;
 import com.codecool.restaurant.user.UserService;
@@ -18,47 +15,46 @@ import java.util.List;
 
 @AllArgsConstructor
 @Service
-public class MealsToCartService {
-    private final MealsToCartRepository mealsToCartRepository;
+public class MealsInCartService {
+    private final MealsInCartRepository mealsInCartRepository;
     private final UserService userService;
-    private final ShoppingCartService shoppingCartService;
 
 
-    public void addMealsToCart(AddMealToCartDTO addMealToCartDTO, Authentication authentication) {
+    public void addMealsToCart(MealInCartDTO addMealToCartDTO, Authentication authentication) {
         String authenticationName = authentication.getName();
         User user = userService.getUserByUsername(authenticationName);
-        ShoppingCart cartByUser = shoppingCartService.getCartByUser(user);
-        boolean exists = mealsToCartRepository.existsByIdMealAndShoppingCartId(addMealToCartDTO.getIdMeal(), cartByUser.getId());
+
+        boolean exists = mealsInCartRepository.existsByIdMealAndUserId(addMealToCartDTO.getIdMeal(), user.getId());
 
         if (!exists) {
-            MealsToCart mealsToCart = new MealsToCart();
+            MealsInCart mealsInCart = new MealsInCart();
 
-            mealsToCart.setIdMeal(addMealToCartDTO.getIdMeal());
-            mealsToCart.setShoppingCart(cartByUser);
-            mealsToCart.setMealImage(addMealToCartDTO.getMealImage());
-            mealsToCart.setQuantity(addMealToCartDTO.getQuantity());
-            mealsToCart.setMealName(addMealToCartDTO.getMealName());
-            mealsToCart.setMealPrice(addMealToCartDTO.getMealPrice());
+            mealsInCart.setUser(user);
+            mealsInCart.setIdMeal(addMealToCartDTO.getIdMeal());
+            mealsInCart.setMealImage(addMealToCartDTO.getMealImage());
+            mealsInCart.setQuantity(addMealToCartDTO.getQuantity());
+            mealsInCart.setMealName(addMealToCartDTO.getMealName());
+            mealsInCart.setMealPrice(addMealToCartDTO.getMealPrice());
 
-            mealsToCartRepository.save(mealsToCart);
+
+            mealsInCartRepository.save(mealsInCart);
         } else {
-            MealsToCart meal = mealsToCartRepository.findByIdMealAndShoppingCartId(addMealToCartDTO.getIdMeal(), cartByUser.getId());
+            MealsInCart meal = mealsInCartRepository.findByIdMealAndUserId(addMealToCartDTO.getIdMeal(), user.getId());
             meal.setQuantity(meal.getQuantity() + 1);
-            mealsToCartRepository.save(meal);
+            mealsInCartRepository.save(meal);
         }
     }
 
 
-    public double getTotalPrice(ShoppingCart shoppingCart) {
-        return mealsToCartRepository.totalQty(shoppingCart) * 5;
+    public double getTotalPrice(User user) {
+        return mealsInCartRepository.totalQty(user) * 5;
     }
 
 
     public List<MealInCartDTO> allMealsInCartByAuthenticateUser(Authentication authentication) {
         String authenticationName = authentication.getName();
         User user = userService.getUserByUsername(authenticationName);
-        ShoppingCart cartByUser = shoppingCartService.getCartByUser(user);
-        List<MealsToCart> allByShoppingCartId = mealsToCartRepository.findAllByShoppingCartId(cartByUser.getId());
+        List<MealsInCart> allByShoppingCartId = mealsInCartRepository.findAllByUserId(user.getId());
         List<MealInCartDTO> mealsInCart = new ArrayList<>();
         allByShoppingCartId.forEach(item -> {
             MealInCartDTO meal = new MealInCartDTO();
@@ -73,13 +69,13 @@ public class MealsToCartService {
     }
 
     public void changeQtyMealInCart(MealInCartDTO meal) {
-        MealsToCart mealsToCart = mealsToCartRepository.findById(meal.getMealInCartId()).orElseThrow(NoDataFoundException::new);
-        mealsToCart.setQuantity(meal.getQuantity());
-        mealsToCartRepository.save(mealsToCart);
+        MealsInCart mealsInCart = mealsInCartRepository.findById(meal.getMealInCartId()).orElseThrow(NoDataFoundException::new);
+        mealsInCart.setQuantity(meal.getQuantity());
+        mealsInCartRepository.save(mealsInCart);
     }
 
     public void deleteItem(MealInCartDTO meal) {
-        mealsToCartRepository.deleteById(meal.getMealInCartId());
+        mealsInCartRepository.deleteById(meal.getMealInCartId());
     }
 
     public OrderDetailsDTO orderDetailsByAuthenticateUser(Authentication authentication) {
@@ -100,7 +96,7 @@ public class MealsToCartService {
     }
 
     @Transactional
-    public void clearCart(ShoppingCart shoppingCart) {
-        mealsToCartRepository.deleteAllByShoppingCartId(shoppingCart.getId());
+    public void clearCart(User user) {
+        mealsInCartRepository.deleteAllByUserId(user.getId());
     }
 }

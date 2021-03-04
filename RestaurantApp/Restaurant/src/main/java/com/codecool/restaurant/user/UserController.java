@@ -1,9 +1,8 @@
 package com.codecool.restaurant.user;
 
-import com.codecool.restaurant.shoppingCart.ShoppingCart;
-import com.codecool.restaurant.shoppingCart.ShoppingCartService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.*;
@@ -12,21 +11,15 @@ import java.util.*;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @Api(tags = "User Queries", value = "UserQueries")
+@AllArgsConstructor
 public class UserController {
 
     private final UserService userService;
-    private final ShoppingCartService shoppingCartService;
-
-    public UserController(UserService userService, ShoppingCartService shoppingCartService) {
-        this.userService = userService;
-        this.shoppingCartService = shoppingCartService;
-    }
 
     @PostMapping
     @ApiOperation(value = "Add a new user")
     public void addUser(@Valid @RequestBody User user){
         userService.addUser(user);
-        shoppingCartService.addCart(new ShoppingCart(user));
     }
 
     @GetMapping

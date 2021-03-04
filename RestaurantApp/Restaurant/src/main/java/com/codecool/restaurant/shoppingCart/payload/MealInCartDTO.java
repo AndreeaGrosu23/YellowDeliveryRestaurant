@@ -4,19 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotEmpty;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class MealInCartDTO {
 
-    @NotEmpty
+
     private Long mealInCartId;
     private String mealName;
     private String mealImage;
     private double mealPrice;
     private int quantity;
+    private String idMeal;
+
 
 
 }

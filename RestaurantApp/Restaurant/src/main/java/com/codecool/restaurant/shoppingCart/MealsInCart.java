@@ -1,6 +1,6 @@
-package com.codecool.restaurant.meal;
+package com.codecool.restaurant.shoppingCart;
 
-import com.codecool.restaurant.shoppingCart.ShoppingCart;
+import com.codecool.restaurant.user.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -10,8 +10,8 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name="MEALS_TO_CART")
-public class MealsToCart {
+@Table(name = "MEALS_IN_CART")
+public class MealsInCart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,8 +24,7 @@ public class MealsToCart {
     private int quantity;
     private String idMeal;
 
-    @ManyToOne
-    @JoinColumn(name="shoppingCart_id")
-    private ShoppingCart shoppingCart;
-
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }
