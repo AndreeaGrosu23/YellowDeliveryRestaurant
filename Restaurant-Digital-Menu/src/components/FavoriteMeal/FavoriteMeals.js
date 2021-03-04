@@ -28,8 +28,8 @@ export default function FavoriteMeals() {
   }, [token, username]);
   const handleAddMealToCart = (item) => {
     let mealData = {
-      mealName: item.strMeal,
-      mealImage: item.strMealThumb,
+      mealName: item.name,
+      mealImage: item.image,
       mealPrice: 5.0,
       quantity: 1,
       idMeal: item.idMeal,
