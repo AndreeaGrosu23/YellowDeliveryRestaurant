@@ -1,4 +1,4 @@
-package com.codecool.restaurant.shoppingCart;
+package com.codecool.restaurant.shoppingCart.payload;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

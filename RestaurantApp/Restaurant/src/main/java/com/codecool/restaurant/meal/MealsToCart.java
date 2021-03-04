@@ -27,6 +27,8 @@ public class MealsToCart {
     @JoinColumn(name="meal_id")
     private Meal meal;
 
+
+
     public MealsToCart(ShoppingCart shoppingCart, Meal meal) {
         this.shoppingCart = shoppingCart;
         this.meal = meal;

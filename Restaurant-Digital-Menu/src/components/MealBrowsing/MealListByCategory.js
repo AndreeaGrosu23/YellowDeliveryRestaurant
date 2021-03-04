@@ -179,6 +179,7 @@ async function addMealToUserCart({ params, token }) {
       params,
       { headers: { Authorization: `Bearer ${token}` } }
     );
+    console.log(dataResponse);
     return dataResponse;
   } catch (error) {
     console.error(error);
