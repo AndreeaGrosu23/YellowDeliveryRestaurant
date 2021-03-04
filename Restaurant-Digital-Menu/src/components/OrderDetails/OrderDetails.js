@@ -7,69 +7,39 @@ import { useForm } from "react-hook-form";
 import "../MealBrowsing/FoodCategories.css";
 
 function OrderDetails({ name }) {
-  const [user, setUser] = useState([]);
   const [listOfMeals, setListOfMeals] = useState([]);
   const { handleSubmit } = useForm();
-  const userName = window.sessionStorage.getItem("User");
   const token = window.sessionStorage.getItem("token");
+  const [orderDetails, setOrderDetails] = useState([]);
 
   useEffect(() => {
     async function getData() {
-      const cartResponse = await axios.get(
-        `http://localhost:8080/api/v1/cart/mealsInCart/${name}`,
-        {
+      await axios
+        .get("http://localhost:8080/api/v1/cart/order-details", {
           headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      setListOfMeals(cartResponse.data);
+        })
+        .then((res) => {
+          setOrderDetails(res.data);
+          setListOfMeals(res.data.meals);
+        });
     }
     getData();
-  }, [name, token]);
+  }, [token]);
 
-  useEffect(() => {
-    async function getData() {
-      const response = await axios.get(
-        `http://localhost:8080/api/v1/user/view/${userName}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      setUser(response.data);
-    }
-    getData();
-  }, [token, userName]);
-
-  const getListOfMeals = (mapWithMeals) => {
-    let content = [];
-    let meal = {};
-    for (let [mealJSON, quantity] of Object.entries(mapWithMeals)) {
-      meal = JSON.parse(mealJSON);
-      content.push(
-        <tr key={meal.id}>
-          <td>{meal.name}</td>
-          <td>{quantity}</td>
-          <td>{meal.price * quantity} $</td>
-        </tr>
-      );
-    }
-
-    return content;
-  };
-
-  const getTotalPrice = (mapWithMeals) => {
-    let meal = {};
+  const getTotalPrice = (data) => {
     let sum = 0;
-    for (let [mealJSON, quantity] of Object.entries(mapWithMeals)) {
-      meal = JSON.parse(mealJSON);
-      sum += meal.price * quantity;
-    }
+    sum =
+      data.reduce((accumulator, currentValue) => {
+        return accumulator + currentValue.quantity;
+      }, 0) * 5;
+
     return sum;
   };
 
   const onSubmit = () => {
     const paymentRequest = {
       totalAmount: `${getTotalPrice(listOfMeals)}`,
-      description: `OrderId${user.firstName}`,
+      description: `OrderId${orderDetails.userFirstName}`,
       linkPaypal: null,
     };
     doPayment(paymentRequest);
@@ -91,7 +61,14 @@ function OrderDetails({ name }) {
           </tr>
         </thead>
         <tbody>
-          {listOfMeals && getListOfMeals(listOfMeals)}
+          {listOfMeals.map((item) => (
+            <tr key={item.mealInCartId}>
+              <td>{item.mealName}</td>
+              <td>{item.quantity}</td>
+              <td>{item.mealPrice * item.quantity} $</td>
+            </tr>
+          ))}
+
           <tr style={{ color: "yellow" }}>
             <td>TOTAL PRICE:</td>
             <td colSpan="2">{listOfMeals && getTotalPrice(listOfMeals)} $</td>
@@ -99,14 +76,14 @@ function OrderDetails({ name }) {
           <tr>
             <td>NAME</td>
             <td colSpan="2">
-              {user.firstName} {user.lastName}
+              {orderDetails.userFirstName} {orderDetails.userLastName}
             </td>
           </tr>
           <tr>
             <td>PHONE NUMBER</td>
             <td colSpan="2">
-              {user.phoneNumber ? (
-                user.phoneNumber
+              {orderDetails.userPhoneNumber ? (
+                orderDetails.userPhoneNumber
               ) : (
                 <Link to={`/user-profile`}>Please add Phone Number</Link>
               )}
@@ -114,13 +91,13 @@ function OrderDetails({ name }) {
           </tr>
           <tr>
             <td>EMAIL ADDRESS</td>
-            <td colSpan="2">{user.emailAddress}</td>
+            <td colSpan="2">{orderDetails.userEmailAddress}</td>
           </tr>
           <tr>
             <td>SHIPPING ADDRESS</td>
             <td colSpan="2">
-              {user.deliveryAddress ? (
-                user.deliveryAddress
+              {orderDetails.userDeliveryAddress ? (
+                orderDetails.userDeliveryAddress
               ) : (
                 <Link to={`/user-profile`}>Please add Shipping Address</Link>
               )}

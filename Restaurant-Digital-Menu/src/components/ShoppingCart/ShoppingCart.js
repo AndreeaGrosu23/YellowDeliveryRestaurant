@@ -5,68 +5,47 @@ import "../MealBrowsing/FoodCategories.css";
 import { Link } from "react-router-dom";
 
 function ShoppingCart() {
-  const [cartId, setCartId] = useState(0);
-  const [listOfMeals, setListOfMeals] = useState({});
-  const userName = window.sessionStorage.getItem("User");
+  const [listOfMeals, setListOfMeals] = useState([]);
+  const [reload, setReload] = useState(false);
   const token = window.sessionStorage.getItem("token");
 
   useEffect(() => {
     async function getData() {
       try {
-        const cartResponse = await axios.get(
-          `http://localhost:8080/api/v1/cart/view/${userName}`,
-          {
+        await axios
+          .get("http://localhost:8080/api/v1/cart/", {
             headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        setCartId(cartResponse.data);
-
-        const mealResponse = await axios.get(
-          `http://localhost:8080/api/v1/cart/mealsInCart/${cartResponse.data}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        setListOfMeals(mealResponse.data);
+          })
+          .then((res) => {
+            setListOfMeals(res.data);
+            setReload(false);
+          });
       } catch (error) {
         console.error(error);
       }
     }
     getData();
-  }, [userName, token]);
+  }, [token, reload]);
 
-  const getListOfMeals = (mapWithMeals) => {
-    let content = [];
-    let meal = {};
-    for (let [mealJSON, quantity] of Object.entries(mapWithMeals)) {
-      meal = JSON.parse(mealJSON);
-      content.push(
-        <div className="card FoodCategoriesCard" key={meal.id}>
-          <Card.Img
-            className="card-img-top cardImg"
-            variant="top"
-            src={meal.image}
-          />
-          <Card.Body>
-            <Card.Title>{meal.name}</Card.Title>
-            <Card.Text>{quantity}</Card.Text>
-            <Card.Text>{meal.price * quantity}$</Card.Text>
-          </Card.Body>
-        </div>
-      );
-    }
+  const getTotalPrice = (data) => {
+    let sum = 0;
+    sum =
+      data.reduce((accumulator, currentValue) => {
+        return accumulator + currentValue.quantity;
+      }, 0) * 5;
 
-    return content;
+    return sum;
   };
 
-  const getTotalPrice = (mapWithMeals) => {
-    let meal = {};
-    let sum = 0;
-    for (let [mealJSON, quantity] of Object.entries(mapWithMeals)) {
-      meal = JSON.parse(mealJSON);
-      sum += meal.price * quantity;
-    }
-    return sum;
+  const handelChangeQty = ({ meal, modification }) => {
+    let newQty = meal.quantity + modification;
+    let data = {
+      mealInCartId: meal.mealInCartId,
+      quantity: newQty,
+    };
+    changeMealQty({ params: data, token: token }).then(() => {
+      setReload(true);
+    });
   };
 
   return (
@@ -75,21 +54,67 @@ function ShoppingCart() {
       style={{ marginBottom: "40rem" }}
     >
       <h1 style={{ color: "white" }}>Cart</h1>
-      {listOfMeals && getListOfMeals(listOfMeals)}
+      {listOfMeals ? (
+        listOfMeals.map((item) => (
+          <div className="card FoodCategoriesCard" key={item.mealInCartId}>
+            <Card.Img
+              className="card-img-top cardImg"
+              variant="top"
+              src={item.mealImage}
+            />
+            <Card.Body>
+              <Card.Title>{item.mealName}</Card.Title>
+              <Card.Text>{item.quantity} Qty</Card.Text>
+              <button
+                className="btn btn-light"
+                onClick={() => handelChangeQty({ meal: item, modification: 1 })}
+              >
+                <span role="img" aria-label="up">
+                  👍
+                </span>
+              </button>
+              <button
+                className="btn btn-light"
+                onClick={() =>
+                  handelChangeQty({ meal: item, modification: -1 })
+                }
+              >
+                <span role="img" aria-label="down">
+                  👎
+                </span>
+              </button>
+              <Card.Text>{item.mealPrice * item.quantity}$</Card.Text>
+            </Card.Body>
+          </div>
+        ))
+      ) : (
+        <p style={{ fontSize: "50px", color: "yellow" }}>No meals in cart</p>
+      )}
       <div>
         <p style={{ fontSize: "50px", color: "yellow" }}>
-          TOTAL PRICE: {listOfMeals && getTotalPrice(listOfMeals)}$
+          TOTAL PRICE: {getTotalPrice(listOfMeals)}$
         </p>
-        {getTotalPrice(listOfMeals) > 0 && (
-          <Link to={`/order-details/${cartId}`}>
-            <button type="button" className="btn btn-info">
-              Checkout
-            </button>{" "}
-          </Link>
-        )}
+        <Link to={`/order-details/`}>
+          <button type="button" className="btn btn-info">
+            Checkout
+          </button>{" "}
+        </Link>
       </div>
     </div>
   );
 }
 
 export default ShoppingCart;
+
+async function changeMealQty({ params, token }) {
+  try {
+    const dataResponse = await axios.put(
+      "http://localhost:8080/api/v1/cart/",
+      params,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    return dataResponse.data;
+  } catch (error) {
+    console.error(error);
+  }
+}

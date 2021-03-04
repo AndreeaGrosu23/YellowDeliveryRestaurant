@@ -1,6 +1,7 @@
 package com.codecool.restaurant.shoppingCart;
 
 import com.codecool.restaurant.exception.ShoppingCartException;
+import com.codecool.restaurant.meal.MealsToCart;
 import com.codecool.restaurant.user.User;
 import org.springframework.stereotype.Service;
 
@@ -25,5 +26,6 @@ public class ShoppingCartService {
     public ShoppingCart getCartById(Long id) {
         return shoppingCartRepository.findById(id).orElseThrow(ShoppingCartException::new);
     }
+
 
 }
