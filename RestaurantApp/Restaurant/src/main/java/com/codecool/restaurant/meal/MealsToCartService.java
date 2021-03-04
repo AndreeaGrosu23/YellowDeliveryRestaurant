@@ -1,7 +1,7 @@
 package com.codecool.restaurant.meal;
 
 import com.codecool.restaurant.exception.NoDataFoundException;
-import com.codecool.restaurant.shoppingCart.MealInCartRequest;
+import com.codecool.restaurant.shoppingCart.payload.MealInCartRequest;
 import com.codecool.restaurant.shoppingCart.ShoppingCart;
 import org.springframework.stereotype.Service;
 
@@ -21,10 +21,6 @@ public class MealsToCartService {
         mealsToCartRepository.save(mealsToCart);
     }
 
-    public List<MealsToCart> getAllMealsByCart(ShoppingCart shoppingCart) {
-
-        return mealsToCartRepository.findAllByShoppingCartId(shoppingCart.getId());
-    }
 
     @Transactional
     public void updateQuantity(Meal meal) {
@@ -60,5 +56,9 @@ public class MealsToCartService {
         MealsToCart mealsToCart = mealsToCartRepository.findById(meal.getMealInCartId()).orElseThrow(NoDataFoundException::new);
         mealsToCart.setQuantity(meal.getQuantity());
         mealsToCartRepository.save(mealsToCart);
+    }
+
+    public void deleteItem(MealInCartRequest meal) {
+        mealsToCartRepository.deleteById(meal.getMealInCartId());
     }
 }
