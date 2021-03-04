@@ -1,5 +1,6 @@
-package com.codecool.restaurant.shoppingCart;
+package com.codecool.restaurant.shoppingCart.payload;
 
+import com.codecool.restaurant.shoppingCart.payload.MealInCartRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
