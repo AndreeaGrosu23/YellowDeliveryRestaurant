@@ -9,9 +9,7 @@ import { Redirect } from "react-router";
 
 export default function UserProfile() {
   const { register, handleSubmit } = useForm();
-
   const token = window.sessionStorage.getItem("token");
-
   const userName = window.sessionStorage.getItem("User");
 
   const [user, setUser] = useState([]);
@@ -72,7 +70,7 @@ export default function UserProfile() {
 
   const handleClose = () => {
     setShow(false);
-    setToHome(true);
+    history.go(0);
   };
 
   const handleShow = () => setShow(true);

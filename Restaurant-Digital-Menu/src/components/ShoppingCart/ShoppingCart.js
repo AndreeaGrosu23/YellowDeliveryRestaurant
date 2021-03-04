@@ -37,7 +37,7 @@ function ShoppingCart() {
     return sum;
   };
 
-  const handelChangeQty = ({ meal, modification }) => {
+  const handleChangeQty = ({ meal, modification }) => {
     let newQty = meal.quantity + modification;
     let data = {
       mealInCartId: meal.mealInCartId,
@@ -67,7 +67,7 @@ function ShoppingCart() {
               <Card.Text>{item.quantity} Qty</Card.Text>
               <button
                 className="btn btn-light"
-                onClick={() => handelChangeQty({ meal: item, modification: 1 })}
+                onClick={() => handleChangeQty({ meal: item, modification: 1 })}
               >
                 <span role="img" aria-label="up">
                   👍
@@ -76,7 +76,7 @@ function ShoppingCart() {
               <button
                 className="btn btn-light"
                 onClick={() =>
-                  handelChangeQty({ meal: item, modification: -1 })
+                  handleChangeQty({ meal: item, modification: -1 })
                 }
               >
                 <span role="img" aria-label="down">
