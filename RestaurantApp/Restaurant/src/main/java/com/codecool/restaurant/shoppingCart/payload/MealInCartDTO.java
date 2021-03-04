@@ -2,19 +2,21 @@ package com.codecool.restaurant.shoppingCart.payload;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
 
 @Data
 @AllArgsConstructor
-public class AddMealToCart {
+@NoArgsConstructor
+public class MealInCartDTO {
 
     @NotEmpty
-    private String username;
-    @NotEmpty
+    private Long mealInCartId;
     private String mealName;
-    @NotEmpty
-    private String image;
+    private String mealImage;
+    private double mealPrice;
+    private int quantity;
 
 
 }

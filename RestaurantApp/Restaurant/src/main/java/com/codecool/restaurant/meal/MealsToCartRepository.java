@@ -12,16 +12,12 @@ import java.util.List;
 public interface MealsToCartRepository extends JpaRepository<MealsToCart, Long> {
     List<MealsToCart> findAllByShoppingCartId(Long id);
 
-    @Modifying(clearAutomatically = true)
-    @Query(value = "update MealsToCart mc set mc.quantity = mc.quantity+1 where mc.meal=:meal ")
-    void updateQuantity(Meal meal);
+    boolean existsByIdMealAndShoppingCartId(String idMeal, Long id);
+
+    MealsToCart findByIdMealAndShoppingCartId(String idMeal, Long id);
 
     @Query(value= "SELECT SUM(mc.quantity) FROM MealsToCart mc WHERE mc.shoppingCart=:shoppingCart")
     double totalQty(ShoppingCart shoppingCart);
 
-    @Modifying(clearAutomatically = true)
-    @Query(value="DELETE FROM MealsToCart mc where mc.shoppingCart=:shoppingCart")
-    void deleteByShoppingCart(ShoppingCart shoppingCart);
-
-
+    void deleteAllByShoppingCartId(Long id);
 }

@@ -1,12 +1,11 @@
 package com.codecool.restaurant.meal;
 
 import com.codecool.restaurant.shoppingCart.ShoppingCart;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
@@ -16,21 +15,17 @@ public class MealsToCart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter(AccessLevel.NONE)
     private Long id;
-    private Integer quantity = 1;
+
+    private String mealName;
+    private String mealImage;
+    private double mealPrice;
+    private int quantity;
+    private String idMeal;
 
     @ManyToOne
     @JoinColumn(name="shoppingCart_id")
     private ShoppingCart shoppingCart;
 
-    @ManyToOne
-    @JoinColumn(name="meal_id")
-    private Meal meal;
-
-
-
-    public MealsToCart(ShoppingCart shoppingCart, Meal meal) {
-        this.shoppingCart = shoppingCart;
-        this.meal = meal;
-    }
 }
