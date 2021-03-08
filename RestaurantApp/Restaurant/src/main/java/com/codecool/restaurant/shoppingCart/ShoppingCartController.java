@@ -1,11 +1,9 @@
 package com.codecool.restaurant.shoppingCart;
 
-import com.codecool.restaurant.meal.Meal;
-import com.codecool.restaurant.meal.MealService;
-import com.codecool.restaurant.meal.MealsToCart;
-import com.codecool.restaurant.meal.MealsToCartService;
-import com.codecool.restaurant.user.User;
-import com.codecool.restaurant.user.UserService;
+import com.codecool.restaurant.shoppingCart.payload.MealInCartDTO;
+import com.codecool.restaurant.shoppingCart.payload.OrderDetailsDTO;
+import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -14,47 +12,36 @@ import java.util.*;
 @RequestMapping("api/v1/cart")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
+@AllArgsConstructor
 public class ShoppingCartController {
-    private final ShoppingCartService shoppingCartService;
-    private final MealService mealService;
-    private final UserService userService;
-    private final MealsToCartService mealsToCartService;
 
-    public ShoppingCartController(ShoppingCartService shoppingCartService, MealService mealService, UserService userService, MealsToCartService mealsToCartService) {
-        this.shoppingCartService = shoppingCartService;
-        this.mealService = mealService;
-        this.userService = userService;
-        this.mealsToCartService = mealsToCartService;
+    private final MealsInCartService mealsInCartService;
+
+
+    @GetMapping
+    public List<MealInCartDTO> getAllMealsInCart(Authentication authentication) {
+        return mealsInCartService.allMealsInCartByAuthenticateUser(authentication);
     }
 
-    @PostMapping("/meal")
-    public void addMealToDB(@Valid @RequestBody AddMealToCart addMealToCart) {
-        if (mealService.findByName(addMealToCart.getMealName()) != null) {
-            mealsToCartService.updateQuantity(mealService.findByName(addMealToCart.getMealName()));
+    @PostMapping
+    public void addMealToCart(@Valid @RequestBody MealInCartDTO addMealToCartDTO, Authentication authentication) {
+        mealsInCartService.addMealsToCart(addMealToCartDTO, authentication);
+    }
+
+
+    @PutMapping
+    public void updateQtyMealInCart(@RequestBody MealInCartDTO meal) {
+        if (meal.getQuantity() > 0) {
+            mealsInCartService.changeQtyMealInCart(meal);
         } else {
-            Meal meal = new Meal(addMealToCart.getMealName(), "https://www.themealdb.com/images/media/meals/" + addMealToCart.getImage());
-            mealService.addMeal(meal);
-            User user = userService.getUserByUsername(addMealToCart.getUsername());
-            ShoppingCart cart = shoppingCartService.getCartByUser(user);
-            mealsToCartService.addMealsToCart(new MealsToCart(cart, meal));
+            mealsInCartService.deleteItem(meal);
         }
     }
 
-    @GetMapping(path = "mealsInCart/{id}")
-    public Map<Meal, Integer> getAllMealInCart(@PathVariable("id") Long id) {
-        ShoppingCart cart = shoppingCartService.getCartById(id);
-        List<MealsToCart> list = mealsToCartService.getAllMealsByCart(cart);
-        Map<Meal, Integer> listOfMeals = new HashMap<>();
-        for (MealsToCart meal : list) {
-            listOfMeals.put(meal.getMeal(), meal.getQuantity());
-        }
-        return listOfMeals;
+    @GetMapping("/order-details")
+    public OrderDetailsDTO getOrderDetails(Authentication authentication) {
+        return mealsInCartService.orderDetailsByAuthenticateUser(authentication);
     }
 
 
-    @GetMapping(path = "view/{username}")
-    public long getCartIdByUserName(@PathVariable("username") String username) {
-        User user = userService.getUserByUsername(username);
-        return shoppingCartService.getCartByUser(user).getId();
-    }
 }

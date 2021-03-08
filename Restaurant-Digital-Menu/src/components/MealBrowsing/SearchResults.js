@@ -27,12 +27,11 @@ function SearchResults({ name }) {
 
   const handleAddMealToCart = (item) => {
     let mealData = {
-      username: username,
       mealName: item.strMeal,
-      image: item.strMealThumb.replace(
-        "https://www.themealdb.com/images/media/meals/",
-        ""
-      ),
+      mealImage: item.strMealThumb,
+      mealPrice: 5.0,
+      quantity: 1,
+      idMeal: item.idMeal,
     };
     if (username) {
       addMealToUserCart({ params: mealData, token: token })
@@ -91,7 +90,7 @@ export default SearchResults;
 async function addMealToUserCart({ params, token }) {
   try {
     const dataResponse = await axios.post(
-      "http://localhost:8080/api/v1/cart/meal",
+      "http://localhost:8080/api/v1/cart/",
       params,
       { headers: { Authorization: `Bearer ${token}` } }
     );

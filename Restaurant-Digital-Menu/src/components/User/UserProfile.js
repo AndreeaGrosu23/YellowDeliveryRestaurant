@@ -9,13 +9,10 @@ import { Redirect } from "react-router";
 
 export default function UserProfile() {
   const { register, handleSubmit } = useForm();
-
   const token = window.sessionStorage.getItem("token");
-
   const userName = window.sessionStorage.getItem("User");
 
   const [user, setUser] = useState([]);
-  const [toHome, setToHome] = useState();
   const [show, setShow] = useState(false);
 
   const history = useHistory();
@@ -72,14 +69,14 @@ export default function UserProfile() {
 
   const handleClose = () => {
     setShow(false);
-    setToHome(true);
+    history.go(0);
   };
 
   const handleShow = () => setShow(true);
 
   return (
     <div style={{ marginBottom: "25rem" }}>
-      {toHome || userName === null ? <Redirect to="/" /> : null}
+      {userName === null ? <Redirect to="/" /> : null}
       <div className="container rounded bg-white mt-5">
         <div className="row">
           <div className="col-md-4 border-right">

@@ -7,7 +7,7 @@ function ToastMessage({ toast, setToast, toastBody }) {
       style={{
         position: "fixed",
         top: 0,
-        left: "39%",
+        right: "45%",
       }}
       onClose={() => setToast(false)}
       show={toast}
