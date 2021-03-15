@@ -2,11 +2,12 @@ package com.codecool.restaurant.favoriteMeal;
 
 import com.codecool.restaurant.user.User;
 import com.codecool.restaurant.user.UserService;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
-@RequestMapping("api/v1/user")
+@RequestMapping("api/v1/user/favorites")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 public class FavoriteMealController {
@@ -19,20 +20,23 @@ public class FavoriteMealController {
         this.userService = userService;
     }
 
-    @PostMapping(path = "{username}/favorites")
-    public User addMealToFavorites(@PathVariable("username") String username, @RequestBody FavoriteMealDto favoriteMealDto){
+    @PostMapping()
+    public User addMealToFavorites(@RequestBody FavoriteMealDto favoriteMealDto, Authentication authentication){
+        String username = authentication.getName();
         favoriteMealService.addFavoriteMeal(favoriteMealDto, username);
         return userService.getUserByUsername(username);
     }
 
-    @GetMapping(path = "{username}/favorites")
-    public Set<FavoriteMeal> getFavorites(@PathVariable("username") String username) {
+    @GetMapping()
+    public Set<FavoriteMeal> getFavorites(Authentication authentication) {
+        String username = authentication.getName();
         return favoriteMealService.getAllFavoriteMeals(username);
 
     }
 
-    @DeleteMapping(path = "{username}/favorites/delete/{idMeal}")
-    public void deleteFavoriteByIdMeal(@PathVariable("username") String username, @PathVariable("idMeal") String idMeal) {
+    @DeleteMapping(path = "/{idMeal}")
+    public void deleteFavoriteByIdMeal(@PathVariable("idMeal") String idMeal, Authentication authentication) {
+        String username = authentication.getName();
         favoriteMealService.deleteFavoriteMealByIdMeal(username, idMeal);
     }
 }

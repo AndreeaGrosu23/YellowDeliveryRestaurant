@@ -1,7 +1,6 @@
 package com.codecool.restaurant.favoriteMeal;
 
 import com.codecool.restaurant.user.User;
-import com.codecool.restaurant.user.UserRepository;
 import com.codecool.restaurant.user.UserService;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +12,10 @@ public class FavoriteMealService {
 
     private final FavoriteMealRepository favoriteMealRepository;
     private final UserService userService;
-    private final UserRepository userRepository;
 
-    public FavoriteMealService(FavoriteMealRepository favoriteMealRepository, UserService userService, UserRepository userRepository) {
+    public FavoriteMealService(FavoriteMealRepository favoriteMealRepository, UserService userService) {
         this.favoriteMealRepository = favoriteMealRepository;
         this.userService = userService;
-        this.userRepository = userRepository;
     }
 
     @Transactional
@@ -34,7 +31,7 @@ public class FavoriteMealService {
             user.getFavoriteMeals().add(favoriteMeal);
         }
 
-        userRepository.save(user);
+        userService.updateUserFavorites(user);
     }
 
     public Set<FavoriteMeal> getAllFavoriteMeals(String username) {
@@ -47,6 +44,6 @@ public class FavoriteMealService {
         User user = userService.getUserByUsername(username);
         FavoriteMeal favoriteMeal = favoriteMealRepository.findFavoriteMealByIdMeal(idMeal);
         user.getFavoriteMeals().remove(favoriteMeal);
-        userRepository.save(user);
+        userService.updateUserFavorites(user);
     }
 }

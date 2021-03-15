@@ -58,6 +58,12 @@ public class UserService {
         userRepository.save(user);
     }
 
+    @Transactional
+    public void updateUserFavorites(User user) {
+        userRepository.save(user);
+    }
+
+
     public User getUserByUsername(String username){
         return userRepository.findByUserName(username).orElseThrow(NoDataFoundException::new);
     }

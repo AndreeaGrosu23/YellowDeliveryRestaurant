@@ -19,7 +19,6 @@ public class MealsInCartService {
     private final MealsInCartRepository mealsInCartRepository;
     private final UserService userService;
 
-
     public void addMealsToCart(MealInCartDTO addMealToCartDTO, Authentication authentication) {
         String authenticationName = authentication.getName();
         User user = userService.getUserByUsername(authenticationName);
