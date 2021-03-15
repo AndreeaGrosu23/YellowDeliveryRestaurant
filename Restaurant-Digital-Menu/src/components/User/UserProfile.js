@@ -21,7 +21,7 @@ export default function UserProfile() {
     async function getData() {
       await axios
         .get(
-          `http://localhost:8080/api/v1/user/view/${userName}`,
+          "http://localhost:8080/api/v1/user",
 
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -38,8 +38,8 @@ export default function UserProfile() {
   }, [token, userName]);
 
   const onSubmit = (data) => {
-    fetch(`http://localhost:8080/api/v1/user/${userName}/edit`, {
-      method: "POST",
+    fetch("http://localhost:8080/api/v1/user", {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,

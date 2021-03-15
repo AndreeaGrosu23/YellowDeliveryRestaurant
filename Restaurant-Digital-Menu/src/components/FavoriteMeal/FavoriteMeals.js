@@ -14,7 +14,7 @@ export default function FavoriteMeals() {
   useEffect(() => {
     async function getData() {
       await axios
-        .get(`http://localhost:8080/api/v1/user/${username}/favorites`, {
+        .get("http://localhost:8080/api/v1/user/favorites", {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {

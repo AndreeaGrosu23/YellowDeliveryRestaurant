@@ -31,7 +31,7 @@ function MealListByCategory({ name }) {
   useEffect(() => {
     async function getDataFavorites() {
       await axios
-        .get(`http://localhost:8080/api/v1/user/${username}/favorites`, {
+        .get("http://localhost:8080/api/v1/user/favorites", {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -65,7 +65,7 @@ function MealListByCategory({ name }) {
           name: newFavoriteMeal.strMeal,
           image: newFavoriteMeal.strMealThumb,
         };
-        fetch(`http://localhost:8080/api/v1/user/${username}/favorites`, {
+        fetch("http://localhost:8080/api/v1/user/favorites", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -77,7 +77,7 @@ function MealListByCategory({ name }) {
         });
       } else {
         fetch(
-          `http://localhost:8080/api/v1/user/${username}/favorites/delete/${newFavoriteMeal.idMeal}`,
+          `http://localhost:8080/api/v1/user/favorites/${newFavoriteMeal.idMeal}`,
           {
             method: "DELETE",
             headers: {
