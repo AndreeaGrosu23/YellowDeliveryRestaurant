@@ -2,6 +2,8 @@ package com.codecool.restaurant.shoppingCart;
 
 import com.codecool.restaurant.user.User;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -26,5 +28,6 @@ public class MealsInCart {
 
     @OneToOne
     @JoinColumn(name = "user_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 }
