@@ -17,7 +17,6 @@ public class ShoppingCartController {
 
     private final MealsInCartService mealsInCartService;
 
-
     @GetMapping
     public List<MealInCartDTO> getAllMealsInCart(Authentication authentication) {
         return mealsInCartService.allMealsInCartByAuthenticateUser(authentication);
