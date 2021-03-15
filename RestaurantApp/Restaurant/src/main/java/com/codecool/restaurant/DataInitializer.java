@@ -22,6 +22,7 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+
         User user = new User("John", "Doe", "admin", "j.doe@gmail.com", "", "", passwordEncoder.encode("admin"));
         userRepository.save(user);
     }

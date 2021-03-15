@@ -6,6 +6,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -18,7 +20,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name= "USER")
+@Table(name = "users")
 @ApiModel(description = "Model to create a new User")
 public class User {
 
@@ -56,8 +58,9 @@ public class User {
     private String userRole= "ROLE_USER";
 
     @ManyToMany(cascade = { CascadeType.ALL })
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinTable(
-            name = "FAVORITE_USER",
+            name = "FAVORITE_USERS",
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "favoriteMeal_id") }
     )

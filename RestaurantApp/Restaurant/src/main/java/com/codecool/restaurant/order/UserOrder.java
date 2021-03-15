@@ -4,6 +4,9 @@ import com.codecool.restaurant.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import java.util.Date;
 
 import javax.persistence.*;
@@ -25,8 +28,10 @@ public class UserOrder {
     @Column(nullable=false, updatable=false)
     private Date date;
 
+
     @ManyToOne
     @JoinColumn(name="user_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
     public UserOrder(String status, Double totalPrice, User user) {
