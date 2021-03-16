@@ -20,10 +20,10 @@ public class UserService {
 
     private final JwtTokenServices jwtTokenServices;
 
-    public UserService(UserRepository userRepository, JwtTokenServices jwtTokenServices){
+    public UserService(UserRepository userRepository, JwtTokenServices jwtTokenServices) {
+        passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         this.userRepository = userRepository;
         this.jwtTokenServices = jwtTokenServices;
-        passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
     // Persisting User with encoded password
@@ -31,7 +31,6 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
-
 
     public List<User> getAllUsers() {
         List<User> listUsers = userRepository.findAll();
@@ -47,7 +46,7 @@ public class UserService {
 
     @Transactional
     public void updateUserDetails(UserDetailsDto updatedUser, String userName) {
-        //throw exception if user not found
+        //getUserByUsername throws exception if user not found
         User user = getUserByUsername(userName);
 
         user.setFirstName(updatedUser.getFirstName());

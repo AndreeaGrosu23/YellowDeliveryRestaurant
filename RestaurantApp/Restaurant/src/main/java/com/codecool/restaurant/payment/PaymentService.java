@@ -15,11 +15,8 @@ import org.springframework.web.client.RestTemplate;
 public class PaymentService {
 
     private final ShoppingCartService shoppingCartService;
-
     private final UserService userService;
-
     private final UserOrderRepository userOrderRepository;
-
     private final RestTemplate restTemplate;
 
 
