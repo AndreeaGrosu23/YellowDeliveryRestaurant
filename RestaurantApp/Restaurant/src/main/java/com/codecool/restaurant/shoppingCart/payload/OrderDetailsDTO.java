@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderDetailsDTO {
 
-    List<MealInCartDTO> meals;
+    List<ViewCart> meals;
     private String userFirstName;
     private String userLastName;
     private String userPhoneNumber;

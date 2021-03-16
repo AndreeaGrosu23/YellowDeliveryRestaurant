@@ -1,8 +1,8 @@
 package com.codecool.restaurant.shoppingCart;
 
-import com.codecool.restaurant.shoppingCart.payload.MealInCartDTO;
-import com.codecool.restaurant.shoppingCart.payload.OrderDetailsDTO;
+import com.codecool.restaurant.shoppingCart.payload.*;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,23 +18,27 @@ public class ShoppingCartController {
     private final ShoppingCartService shoppingCartService;
 
     @GetMapping
-    public List<MealInCartDTO> getAllMealsInCart(Authentication authentication) {
+    public List<ViewCart> getAllMealsInCart(Authentication authentication) {
         return shoppingCartService.allMealsInCartByAuthenticateUser(authentication);
     }
 
     @PostMapping
-    public void addMealToCart(@Valid @RequestBody MealInCartDTO addMealToCartDTO, Authentication authentication) {
-        shoppingCartService.addMealsToCart(addMealToCartDTO, authentication);
+    public ResponseEntity<?> addMealToCart(@Valid @RequestBody AddMealInCartRequest addMealToCartDTO, Authentication authentication) {
+        ShoppingCart shoppingCart = shoppingCartService.addMealsToCart(addMealToCartDTO, authentication);
+        return ResponseEntity.ok(new GeneralResponse(true, "Meal add to cart " + shoppingCart.getMealName()));
     }
 
 
     @PutMapping
-    public void updateQtyMealInCart(@RequestBody MealInCartDTO meal) {
+    public ResponseEntity<?> updateQtyMealInCart(@Valid @RequestBody ChangeQtyInCartRequest meal) {
         if (meal.getQuantity() > 0) {
-            shoppingCartService.changeQtyMealInCart(meal);
+            ShoppingCart shoppingCart = shoppingCartService.changeQtyMealInCart(meal);
+            return ResponseEntity.ok(new GeneralResponse(true, "Quantity change " + shoppingCart.getMealName()));
         } else {
             shoppingCartService.deleteItem(meal);
+            return ResponseEntity.ok(new GeneralResponse(true, "Meal removed"));
         }
+
     }
 
     @GetMapping("/order-details")

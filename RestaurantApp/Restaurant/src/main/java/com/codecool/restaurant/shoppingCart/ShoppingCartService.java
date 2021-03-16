@@ -1,8 +1,10 @@
 package com.codecool.restaurant.shoppingCart;
 
 import com.codecool.restaurant.exception.NoDataFoundException;
-import com.codecool.restaurant.shoppingCart.payload.MealInCartDTO;
+import com.codecool.restaurant.shoppingCart.payload.AddMealInCartRequest;
+import com.codecool.restaurant.shoppingCart.payload.ChangeQtyInCartRequest;
 import com.codecool.restaurant.shoppingCart.payload.OrderDetailsDTO;
+import com.codecool.restaurant.shoppingCart.payload.ViewCart;
 import com.codecool.restaurant.user.User;
 import com.codecool.restaurant.user.UserService;
 import lombok.AllArgsConstructor;
@@ -10,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,28 +22,29 @@ public class ShoppingCartService {
     private final ShoppingCartRepository shoppingCartRepository;
     private final UserService userService;
 
-    public void addMealsToCart(MealInCartDTO addMealToCartDTO, Authentication authentication) {
+    public ShoppingCart addMealsToCart(AddMealInCartRequest addMealToCartDTO, Authentication authentication) {
         String authenticationName = authentication.getName();
         User user = userService.getUserByUsername(authenticationName);
+        Long userId = user.getId();
+        String idMeal = addMealToCartDTO.getIdMeal();
 
-        boolean exists = shoppingCartRepository.existsByIdMealAndUserId(addMealToCartDTO.getIdMeal(), user.getId());
+        boolean exists = shoppingCartRepository.existsByIdMealAndUserId(idMeal, userId);
 
         if (!exists) {
             ShoppingCart shoppingCart = new ShoppingCart();
 
             shoppingCart.setUser(user);
-            shoppingCart.setIdMeal(addMealToCartDTO.getIdMeal());
+            shoppingCart.setIdMeal(idMeal);
             shoppingCart.setMealImage(addMealToCartDTO.getMealImage());
             shoppingCart.setQuantity(addMealToCartDTO.getQuantity());
             shoppingCart.setMealName(addMealToCartDTO.getMealName());
             shoppingCart.setMealPrice(addMealToCartDTO.getMealPrice());
 
-
-            shoppingCartRepository.save(shoppingCart);
+            return shoppingCartRepository.save(shoppingCart);
         } else {
-            ShoppingCart meal = shoppingCartRepository.findByIdMealAndUserId(addMealToCartDTO.getIdMeal(), user.getId());
+            ShoppingCart meal = shoppingCartRepository.findByIdMealAndUserId(idMeal, userId).orElseThrow(NoDataFoundException::new);
             meal.setQuantity(meal.getQuantity() + 1);
-            shoppingCartRepository.save(meal);
+            return shoppingCartRepository.save(meal);
         }
     }
 
@@ -50,38 +54,41 @@ public class ShoppingCartService {
     }
 
 
-    public List<MealInCartDTO> allMealsInCartByAuthenticateUser(Authentication authentication) {
+    public List<ViewCart> allMealsInCartByAuthenticateUser(Authentication authentication) {
         String authenticationName = authentication.getName();
         User user = userService.getUserByUsername(authenticationName);
-        List<ShoppingCart> allByShoppingCartId = shoppingCartRepository.findAllByUserId(user.getId());
-        List<MealInCartDTO> mealsInCart = new ArrayList<>();
-        allByShoppingCartId.forEach(item -> {
-            MealInCartDTO meal = new MealInCartDTO();
-            meal.setMealInCartId(item.getId());
-            meal.setMealName(item.getMealName());
-            meal.setMealImage(item.getMealImage());
-            meal.setMealPrice(item.getMealPrice());
-            meal.setQuantity(item.getQuantity());
-            mealsInCart.add(meal);
+        Long userId = user.getId();
+        List<ShoppingCart> allByUserId = shoppingCartRepository.findAllByUserIdOrderById(userId);
+
+        List<ViewCart> mealsInCart = new ArrayList<>();
+
+        allByUserId.forEach(item -> {
+            mealsInCart.add(new ViewCart(item.getIdMeal(),
+                    item.getMealName(),
+                    item.getMealImage(),
+                    item.getMealPrice(),
+                    item.getQuantity(),
+                    item.getId()));
         });
         return mealsInCart;
     }
 
-    public void changeQtyMealInCart(MealInCartDTO meal) {
+    public ShoppingCart changeQtyMealInCart(ChangeQtyInCartRequest meal) {
         ShoppingCart shoppingCart = shoppingCartRepository.findById(meal.getMealInCartId()).orElseThrow(NoDataFoundException::new);
         shoppingCart.setQuantity(meal.getQuantity());
-        shoppingCartRepository.save(shoppingCart);
+        return shoppingCartRepository.save(shoppingCart);
     }
 
-    public void deleteItem(MealInCartDTO meal) {
+    public void deleteItem(ChangeQtyInCartRequest meal) {
         shoppingCartRepository.deleteById(meal.getMealInCartId());
+
     }
 
     public OrderDetailsDTO orderDetailsByAuthenticateUser(Authentication authentication) {
         String authenticationName = authentication.getName();
         User user = userService.getUserByUsername(authenticationName);
 
-        List<MealInCartDTO> cartProducts = allMealsInCartByAuthenticateUser(authentication);
+        List<ViewCart> cartProducts = allMealsInCartByAuthenticateUser(authentication);
         OrderDetailsDTO orderDetailsDTO = new OrderDetailsDTO();
 
         orderDetailsDTO.setMeals(cartProducts);
