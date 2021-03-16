@@ -31,7 +31,7 @@ public class FavoriteMealService {
             user.getFavoriteMeals().add(favoriteMeal);
         }
 
-        userService.updateUserFavorites(user);
+        userService.updateUser(user);
     }
 
     public Set<FavoriteMeal> getAllFavoriteMeals(String username) {
@@ -44,6 +44,6 @@ public class FavoriteMealService {
         User user = userService.getUserByUsername(username);
         FavoriteMeal favoriteMeal = favoriteMealRepository.findFavoriteMealByIdMeal(idMeal);
         user.getFavoriteMeals().remove(favoriteMeal);
-        userService.updateUserFavorites(user);
+        userService.updateUser(user);
     }
 }

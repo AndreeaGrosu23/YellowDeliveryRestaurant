@@ -1,6 +1,6 @@
 package com.codecool.restaurant.payment;
 
-import com.codecool.restaurant.shoppingCart.MealsInCartService;
+import com.codecool.restaurant.shoppingCart.ShoppingCartService;
 import com.codecool.restaurant.payment.common.PaypalOrderModel;
 import com.codecool.restaurant.user.User;
 import com.codecool.restaurant.user.UserService;
@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class PaymentService {
 
-    private final MealsInCartService mealsInCartService;
+    private final ShoppingCartService shoppingCartService;
 
     private final UserService userService;
 
@@ -29,11 +29,11 @@ public class PaymentService {
 
 //        Save status order
         User user = userService.getUserByUsername(userName);
-        double total = mealsInCartService.getTotalPrice(user);
+        double total = shoppingCartService.getTotalPrice(user);
         UserOrder userOrder = new UserOrder(paymentStatus, total, user);
         userOrderRepository.save(userOrder);
 //        Clear the shopping cart
-        mealsInCartService.clearCart(user);
+        shoppingCartService.clearCart(user);
     }
 
 

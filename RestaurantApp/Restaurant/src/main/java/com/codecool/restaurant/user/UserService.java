@@ -46,7 +46,7 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUser(UserDetailsDto updatedUser, String userName) {
+    public void updateUserDetails(UserDetailsDto updatedUser, String userName) {
         //throw exception if user not found
         User user = getUserByUsername(userName);
 
@@ -59,7 +59,7 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUserFavorites(User user) {
+    public void updateUser(User user) {
         userRepository.save(user);
     }
 
