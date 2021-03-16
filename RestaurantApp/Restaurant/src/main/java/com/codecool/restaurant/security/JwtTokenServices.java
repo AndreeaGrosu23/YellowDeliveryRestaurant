@@ -1,15 +1,14 @@
 package com.codecool.restaurant.security;
 
-import com.codecool.restaurant.user.TypeUserRole;
 import io.jsonwebtoken.*;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -18,15 +17,16 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-@Component
-@Slf4j
+@Service
 public class JwtTokenServices {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtTokenServices.class);
 
-    private String secretKey = "secret";
+    @Value("${TOKEN_SECRET:Default}")
+    private String secretKey;
 
-    private final long validityInMilliseconds = 36000000; // 10 hours
+    @Value("${TOKEN_EXPIRATION:Default}")
+    private long validityInMilliseconds;
 
     private final String rolesFieldName = "roles";
 

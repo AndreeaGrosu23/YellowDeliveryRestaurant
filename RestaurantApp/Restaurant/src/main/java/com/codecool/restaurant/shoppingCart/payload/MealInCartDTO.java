@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MealInCartDTO {
 
-
     private Long mealInCartId;
     private String mealName;
     private String mealImage;

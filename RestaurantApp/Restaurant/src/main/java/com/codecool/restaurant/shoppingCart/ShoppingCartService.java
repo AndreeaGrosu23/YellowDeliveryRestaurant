@@ -15,45 +15,45 @@ import java.util.List;
 
 @AllArgsConstructor
 @Service
-public class MealsInCartService {
-    private final MealsInCartRepository mealsInCartRepository;
+public class ShoppingCartService {
+    private final ShoppingCartRepository shoppingCartRepository;
     private final UserService userService;
 
     public void addMealsToCart(MealInCartDTO addMealToCartDTO, Authentication authentication) {
         String authenticationName = authentication.getName();
         User user = userService.getUserByUsername(authenticationName);
 
-        boolean exists = mealsInCartRepository.existsByIdMealAndUserId(addMealToCartDTO.getIdMeal(), user.getId());
+        boolean exists = shoppingCartRepository.existsByIdMealAndUserId(addMealToCartDTO.getIdMeal(), user.getId());
 
         if (!exists) {
-            MealsInCart mealsInCart = new MealsInCart();
+            ShoppingCart shoppingCart = new ShoppingCart();
 
-            mealsInCart.setUser(user);
-            mealsInCart.setIdMeal(addMealToCartDTO.getIdMeal());
-            mealsInCart.setMealImage(addMealToCartDTO.getMealImage());
-            mealsInCart.setQuantity(addMealToCartDTO.getQuantity());
-            mealsInCart.setMealName(addMealToCartDTO.getMealName());
-            mealsInCart.setMealPrice(addMealToCartDTO.getMealPrice());
+            shoppingCart.setUser(user);
+            shoppingCart.setIdMeal(addMealToCartDTO.getIdMeal());
+            shoppingCart.setMealImage(addMealToCartDTO.getMealImage());
+            shoppingCart.setQuantity(addMealToCartDTO.getQuantity());
+            shoppingCart.setMealName(addMealToCartDTO.getMealName());
+            shoppingCart.setMealPrice(addMealToCartDTO.getMealPrice());
 
 
-            mealsInCartRepository.save(mealsInCart);
+            shoppingCartRepository.save(shoppingCart);
         } else {
-            MealsInCart meal = mealsInCartRepository.findByIdMealAndUserId(addMealToCartDTO.getIdMeal(), user.getId());
+            ShoppingCart meal = shoppingCartRepository.findByIdMealAndUserId(addMealToCartDTO.getIdMeal(), user.getId());
             meal.setQuantity(meal.getQuantity() + 1);
-            mealsInCartRepository.save(meal);
+            shoppingCartRepository.save(meal);
         }
     }
 
 
     public double getTotalPrice(User user) {
-        return mealsInCartRepository.totalQty(user) * 5;
+        return shoppingCartRepository.totalQty(user) * 5;
     }
 
 
     public List<MealInCartDTO> allMealsInCartByAuthenticateUser(Authentication authentication) {
         String authenticationName = authentication.getName();
         User user = userService.getUserByUsername(authenticationName);
-        List<MealsInCart> allByShoppingCartId = mealsInCartRepository.findAllByUserId(user.getId());
+        List<ShoppingCart> allByShoppingCartId = shoppingCartRepository.findAllByUserId(user.getId());
         List<MealInCartDTO> mealsInCart = new ArrayList<>();
         allByShoppingCartId.forEach(item -> {
             MealInCartDTO meal = new MealInCartDTO();
@@ -68,13 +68,13 @@ public class MealsInCartService {
     }
 
     public void changeQtyMealInCart(MealInCartDTO meal) {
-        MealsInCart mealsInCart = mealsInCartRepository.findById(meal.getMealInCartId()).orElseThrow(NoDataFoundException::new);
-        mealsInCart.setQuantity(meal.getQuantity());
-        mealsInCartRepository.save(mealsInCart);
+        ShoppingCart shoppingCart = shoppingCartRepository.findById(meal.getMealInCartId()).orElseThrow(NoDataFoundException::new);
+        shoppingCart.setQuantity(meal.getQuantity());
+        shoppingCartRepository.save(shoppingCart);
     }
 
     public void deleteItem(MealInCartDTO meal) {
-        mealsInCartRepository.deleteById(meal.getMealInCartId());
+        shoppingCartRepository.deleteById(meal.getMealInCartId());
     }
 
     public OrderDetailsDTO orderDetailsByAuthenticateUser(Authentication authentication) {
@@ -96,6 +96,6 @@ public class MealsInCartService {
 
     @Transactional
     public void clearCart(User user) {
-        mealsInCartRepository.deleteAllByUserId(user.getId());
+        shoppingCartRepository.deleteAllByUserId(user.getId());
     }
 }

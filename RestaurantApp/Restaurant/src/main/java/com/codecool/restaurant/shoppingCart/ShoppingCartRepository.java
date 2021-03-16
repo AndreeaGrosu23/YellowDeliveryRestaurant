@@ -8,14 +8,14 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface MealsInCartRepository extends JpaRepository<MealsInCart, Long> {
-    List<MealsInCart> findAllByUserId(Long id);
+public interface ShoppingCartRepository extends JpaRepository<ShoppingCart, Long> {
+    List<ShoppingCart> findAllByUserId(Long id);
 
     boolean existsByIdMealAndUserId(String idMeal, Long id);
 
-    MealsInCart findByIdMealAndUserId(String idMeal, Long id);
+    ShoppingCart findByIdMealAndUserId(String idMeal, Long id);
 
-    @Query(value= "SELECT SUM(mc.quantity) FROM MealsInCart mc WHERE mc.user=:user")
+    @Query(value= "SELECT SUM(mc.quantity) FROM ShoppingCart mc WHERE mc.user=:user")
     double totalQty(User user);
 
     void deleteAllByUserId(Long id);

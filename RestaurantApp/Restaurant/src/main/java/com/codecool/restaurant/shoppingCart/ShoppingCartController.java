@@ -15,31 +15,31 @@ import java.util.*;
 @AllArgsConstructor
 public class ShoppingCartController {
 
-    private final MealsInCartService mealsInCartService;
+    private final ShoppingCartService shoppingCartService;
 
     @GetMapping
     public List<MealInCartDTO> getAllMealsInCart(Authentication authentication) {
-        return mealsInCartService.allMealsInCartByAuthenticateUser(authentication);
+        return shoppingCartService.allMealsInCartByAuthenticateUser(authentication);
     }
 
     @PostMapping
     public void addMealToCart(@Valid @RequestBody MealInCartDTO addMealToCartDTO, Authentication authentication) {
-        mealsInCartService.addMealsToCart(addMealToCartDTO, authentication);
+        shoppingCartService.addMealsToCart(addMealToCartDTO, authentication);
     }
 
 
     @PutMapping
     public void updateQtyMealInCart(@RequestBody MealInCartDTO meal) {
         if (meal.getQuantity() > 0) {
-            mealsInCartService.changeQtyMealInCart(meal);
+            shoppingCartService.changeQtyMealInCart(meal);
         } else {
-            mealsInCartService.deleteItem(meal);
+            shoppingCartService.deleteItem(meal);
         }
     }
 
     @GetMapping("/order-details")
     public OrderDetailsDTO getOrderDetails(Authentication authentication) {
-        return mealsInCartService.orderDetailsByAuthenticateUser(authentication);
+        return shoppingCartService.orderDetailsByAuthenticateUser(authentication);
     }
 
 

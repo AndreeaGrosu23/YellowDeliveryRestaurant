@@ -52,7 +52,7 @@ public class UserController {
     @ApiOperation(value = "Update user details")
     public void updateUserProfile(@Valid @RequestBody UserDetailsDto updatedUser, Authentication authentication) {
         String username = authentication.getName();
-        userService.updateUser(updatedUser, username);
+        userService.updateUserDetails(updatedUser, username);
     }
 }
 
