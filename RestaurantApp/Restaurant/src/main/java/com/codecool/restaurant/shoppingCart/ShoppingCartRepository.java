@@ -5,17 +5,19 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public interface MealsInCartRepository extends JpaRepository<MealsInCart, Long> {
-    List<MealsInCart> findAllByUserId(Long id);
+public interface ShoppingCartRepository extends JpaRepository<ShoppingCart, Long> {
+    List<ShoppingCart> findAllByUserIdOrderById(Long id);
 
     boolean existsByIdMealAndUserId(String idMeal, Long id);
 
-    MealsInCart findByIdMealAndUserId(String idMeal, Long id);
+    Optional<ShoppingCart> findByIdMealAndUserId(String idMeal, Long id);
 
-    @Query(value= "SELECT SUM(mc.quantity) FROM MealsInCart mc WHERE mc.user=:user")
+    @Query(value= "SELECT SUM(mc.quantity) FROM ShoppingCart mc WHERE mc.user=:user")
     double totalQty(User user);
 
     void deleteAllByUserId(Long id);

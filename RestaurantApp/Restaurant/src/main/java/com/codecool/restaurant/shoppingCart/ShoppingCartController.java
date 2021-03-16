@@ -1,8 +1,8 @@
 package com.codecool.restaurant.shoppingCart;
 
-import com.codecool.restaurant.shoppingCart.payload.MealInCartDTO;
-import com.codecool.restaurant.shoppingCart.payload.OrderDetailsDTO;
+import com.codecool.restaurant.shoppingCart.payload.*;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,32 +15,35 @@ import java.util.*;
 @AllArgsConstructor
 public class ShoppingCartController {
 
-    private final MealsInCartService mealsInCartService;
-
+    private final ShoppingCartService shoppingCartService;
 
     @GetMapping
-    public List<MealInCartDTO> getAllMealsInCart(Authentication authentication) {
-        return mealsInCartService.allMealsInCartByAuthenticateUser(authentication);
+    public List<ViewCart> getAllMealsInCart(Authentication authentication) {
+        return shoppingCartService.allMealsInCartByAuthenticateUser(authentication);
     }
 
     @PostMapping
-    public void addMealToCart(@Valid @RequestBody MealInCartDTO addMealToCartDTO, Authentication authentication) {
-        mealsInCartService.addMealsToCart(addMealToCartDTO, authentication);
+    public ResponseEntity<?> addMealToCart(@Valid @RequestBody AddMealInCartRequest addMealToCartDTO, Authentication authentication) {
+        ShoppingCart shoppingCart = shoppingCartService.addMealsToCart(addMealToCartDTO, authentication);
+        return ResponseEntity.ok(new GeneralResponse(true, "Meal add to cart " + shoppingCart.getMealName()));
     }
 
 
     @PutMapping
-    public void updateQtyMealInCart(@RequestBody MealInCartDTO meal) {
+    public ResponseEntity<?> updateQtyMealInCart(@Valid @RequestBody ChangeQtyInCartRequest meal) {
         if (meal.getQuantity() > 0) {
-            mealsInCartService.changeQtyMealInCart(meal);
+            ShoppingCart shoppingCart = shoppingCartService.changeQtyMealInCart(meal);
+            return ResponseEntity.ok(new GeneralResponse(true, "Quantity change " + shoppingCart.getMealName()));
         } else {
-            mealsInCartService.deleteItem(meal);
+            shoppingCartService.deleteItem(meal);
+            return ResponseEntity.ok(new GeneralResponse(true, "Meal removed"));
         }
+
     }
 
     @GetMapping("/order-details")
     public OrderDetailsDTO getOrderDetails(Authentication authentication) {
-        return mealsInCartService.orderDetailsByAuthenticateUser(authentication);
+        return shoppingCartService.orderDetailsByAuthenticateUser(authentication);
     }
 
 

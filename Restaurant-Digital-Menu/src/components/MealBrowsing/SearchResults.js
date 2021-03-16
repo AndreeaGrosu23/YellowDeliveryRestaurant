@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./FoodCategories.css";
 import ToastMessage from "../Toast/ToastMessage";
+import AddMealToUserCart from "../Util/AddMealToUserCart";
 
 function SearchResults({ name }) {
   const [foodListSearch, setFoodListSearch] = useState([]);
@@ -34,12 +35,10 @@ function SearchResults({ name }) {
       idMeal: item.idMeal,
     };
     if (username) {
-      addMealToUserCart({ params: mealData, token: token })
+      AddMealToUserCart({ params: mealData, token: token })
         .then((res) => {
-          if (res.status === 200) {
-            setToastBody(mealData.mealName + " Add to cart");
-            setToast(true);
-          }
+          setToastBody(res.data);
+          setToast(true);
         })
         .catch((error) => {
           console.error(error);
@@ -87,15 +86,4 @@ function SearchResults({ name }) {
 
 export default SearchResults;
 
-async function addMealToUserCart({ params, token }) {
-  try {
-    const dataResponse = await axios.post(
-      "http://localhost:8080/api/v1/cart/",
-      params,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    return dataResponse;
-  } catch (error) {
-    console.error(error);
-  }
-}
+

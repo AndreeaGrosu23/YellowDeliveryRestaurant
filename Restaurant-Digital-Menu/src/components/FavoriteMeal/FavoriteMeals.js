@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import ToastMessage from "../Toast/ToastMessage";
+import AddMealToUserCart from "../Util/AddMealToUserCart";
 
 export default function FavoriteMeals() {
   const username = window.sessionStorage.getItem("User");
@@ -14,7 +15,7 @@ export default function FavoriteMeals() {
   useEffect(() => {
     async function getData() {
       await axios
-        .get(`http://localhost:8080/api/v1/user/${username}/favorites`, {
+        .get("http://localhost:8080/api/v1/user/favorites", {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -35,12 +36,10 @@ export default function FavoriteMeals() {
       idMeal: item.idMeal,
     };
     if (username) {
-      addMealToUserCart({ params: mealData, token: token })
+      AddMealToUserCart({ params: mealData, token: token })
         .then((res) => {
-          if (res.status === 200) {
-            setToastBody(mealData.mealName + " Add to cart");
-            setToast(true);
-          }
+          setToastBody(res.message);
+          setToast(true);
         })
         .catch((error) => {
           console.error(error);
@@ -99,17 +98,4 @@ export default function FavoriteMeals() {
       <ToastMessage toast={toast} setToast={setToast} toastBody={toastBody} />
     </div>
   );
-}
-
-async function addMealToUserCart({ params, token }) {
-  try {
-    const dataResponse = await axios.post(
-      "http://localhost:8080/api/v1/cart/",
-      params,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    return dataResponse;
-  } catch (error) {
-    console.error(error);
-  }
 }

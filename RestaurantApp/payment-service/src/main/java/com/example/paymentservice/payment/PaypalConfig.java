@@ -3,30 +3,37 @@ package com.example.paymentservice.payment;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.OAuthTokenCredential;
 import com.paypal.base.rest.PayPalRESTException;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Getter
+@Setter
 @Configuration
+@EnableConfigurationProperties
+@ConfigurationProperties("paypal")
 public class PaypalConfig {
 
-    private final String clientId="AYSq3RDGsmBLJE-otTkBtM-jBRd1TCQwFf9RGfwddNXWz0uFU9ztymylOhRS";
-    private final String clientSecret ="EGnHDxD_qRPdaLdZz8iCr8N7_MzF-YHPTkjs6NKYQvQSBngp4PTTVWkPZRbL" ;
-    private final String mode = "sandbox";
+    private String clientId;
+    private String clientSecret;
+    private String mode;
 
     @Bean
     public Map<String, String> paypalSdkConfig() {
         Map<String, String> configMap = new HashMap<>();
-        configMap.put("mode", mode);
+        configMap.put("mode", getMode());
         return configMap;
     }
 
     @Bean
     public OAuthTokenCredential oAuthTokenCredential() {
-        return new OAuthTokenCredential(clientId, clientSecret, paypalSdkConfig());
+        return new OAuthTokenCredential(getClientId(), getClientSecret(), paypalSdkConfig());
     }
 
     @Bean

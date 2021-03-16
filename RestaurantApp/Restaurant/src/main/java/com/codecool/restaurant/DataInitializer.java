@@ -8,6 +8,8 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class DataInitializer implements CommandLineRunner {
 
@@ -22,8 +24,15 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        Optional<User> admin = userRepository.findByUserName("admin");
+        if(admin.isEmpty()){
+            userRepository.save(new User("John",
+                    "Doe", "admin",
+                    "j.doe@gmail.com",
+                    "",
+                    "",
+                    passwordEncoder.encode("admin")));
 
-        User user = new User("John", "Doe", "admin", "j.doe@gmail.com", "", "", passwordEncoder.encode("admin"));
-        userRepository.save(user);
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.codecool.restaurant.user;
 
 import com.codecool.restaurant.exception.NoDataFoundException;
 import com.codecool.restaurant.security.JwtTokenServices;
+import org.postgresql.util.PSQLException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,18 +21,20 @@ public class UserService {
 
     private final JwtTokenServices jwtTokenServices;
 
-    public UserService(UserRepository userRepository, JwtTokenServices jwtTokenServices){
+    public UserService(UserRepository userRepository, JwtTokenServices jwtTokenServices) {
+        passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         this.userRepository = userRepository;
         this.jwtTokenServices = jwtTokenServices;
-        passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
     // Persisting User with encoded password
-    public void addUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
-    }
+    public void addUser(User user) throws PSQLException {
 
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            userRepository.save(user);
+
+
+    }
 
     public List<User> getAllUsers() {
         List<User> listUsers = userRepository.findAll();
@@ -46,8 +49,8 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUser(UserDetailsDto updatedUser, String userName) {
-        //throw exception if user not found
+    public void updateUserDetails(UserDetailsDto updatedUser, String userName) {
+        //getUserByUsername throws exception if user not found
         User user = getUserByUsername(userName);
 
         user.setFirstName(updatedUser.getFirstName());
@@ -57,6 +60,12 @@ public class UserService {
 
         userRepository.save(user);
     }
+
+    @Transactional
+    public void updateUser(User user) {
+        userRepository.save(user);
+    }
+
 
     public User getUserByUsername(String username){
         return userRepository.findByUserName(username).orElseThrow(NoDataFoundException::new);

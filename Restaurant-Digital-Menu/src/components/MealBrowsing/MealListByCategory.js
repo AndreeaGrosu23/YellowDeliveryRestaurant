@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { FaHeart } from "react-icons/fa";
 import "./FoodCategories.css";
 import ToastMessage from "../Toast/ToastMessage";
+import AddMealToUserCart from "../Util/AddMealToUserCart";
 
 function MealListByCategory({ name }) {
   const [foodListCategories, setFoodListCategories] = useState([]);
@@ -31,7 +32,7 @@ function MealListByCategory({ name }) {
   useEffect(() => {
     async function getDataFavorites() {
       await axios
-        .get(`http://localhost:8080/api/v1/user/${username}/favorites`, {
+        .get("http://localhost:8080/api/v1/user/favorites", {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -65,7 +66,7 @@ function MealListByCategory({ name }) {
           name: newFavoriteMeal.strMeal,
           image: newFavoriteMeal.strMealThumb,
         };
-        fetch(`http://localhost:8080/api/v1/user/${username}/favorites`, {
+        fetch("http://localhost:8080/api/v1/user/favorites", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -77,7 +78,7 @@ function MealListByCategory({ name }) {
         });
       } else {
         fetch(
-          `http://localhost:8080/api/v1/user/${username}/favorites/delete/${newFavoriteMeal.idMeal}`,
+          `http://localhost:8080/api/v1/user/favorites/${newFavoriteMeal.idMeal}`,
           {
             method: "DELETE",
             headers: {
@@ -104,12 +105,10 @@ function MealListByCategory({ name }) {
       idMeal: item.idMeal,
     };
     if (username) {
-      addMealToUserCart({ params: mealData, token: token })
+      AddMealToUserCart({ params: mealData, token: token })
         .then((res) => {
-          if (res.status === 200) {
-            setToastBody(mealData.mealName + " Add to cart");
-            setToast(true);
-          }
+          setToastBody(res.message);
+          setToast(true);
         })
         .catch((error) => {
           console.error(error);
@@ -170,17 +169,3 @@ function MealListByCategory({ name }) {
 }
 
 export default MealListByCategory;
-
-async function addMealToUserCart({ params, token }) {
-  try {
-    const dataResponse = await axios.post(
-      "http://localhost:8080/api/v1/cart/",
-      params,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    console.log(dataResponse);
-    return dataResponse;
-  } catch (error) {
-    console.error(error);
-  }
-}
