@@ -2,7 +2,6 @@ package com.codecool.restaurant.user;
 
 import com.codecool.restaurant.exception.NoDataFoundException;
 import com.codecool.restaurant.security.JwtTokenServices;
-import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
-@AllArgsConstructor
 @Service
 public class UserService {
 
@@ -21,6 +19,12 @@ public class UserService {
     private final UserRepository userRepository;
 
     private final JwtTokenServices jwtTokenServices;
+
+    public UserService(UserRepository userRepository, JwtTokenServices jwtTokenServices) {
+        passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        this.userRepository = userRepository;
+        this.jwtTokenServices = jwtTokenServices;
+    }
 
     // Persisting User with encoded password
     public void addUser(User user) {

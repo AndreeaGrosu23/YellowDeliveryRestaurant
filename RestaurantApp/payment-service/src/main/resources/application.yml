@@ -18,3 +18,8 @@ eureka:
     fetch-registry: true
     service-url:
       default: http://localhost:8761/eureka
+
+paypal:
+  clientId: AYSq3RDGsmBLJE-otTkBtM-jBRd1TCQwFf9RGfwddNXWz0uFU9ztymylOhRS
+  clientSecret: EGnHDxD_qRPdaLdZz8iCr8N7_MzF-YHPTkjs6NKYQvQSBngp4PTTVWkPZRbL
+  mode: sandbox
