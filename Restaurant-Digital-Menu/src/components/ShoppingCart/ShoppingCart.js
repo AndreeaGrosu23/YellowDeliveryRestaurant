@@ -64,7 +64,7 @@ function ShoppingCart() {
                 src={item.mealImage}
               />
               <Card.Body>
-                <Card.Title>{item.mealName}</Card.Title>
+                <Card.Title>{item.mealName.substring(0, 20)}</Card.Title>
                 <Card.Text>{item.quantity} Qty</Card.Text>
                 <button
                   className="btn btn-light"
