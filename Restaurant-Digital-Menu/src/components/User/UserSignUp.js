@@ -2,11 +2,12 @@ import React, { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { Redirect } from "react-router";
 import { Button, Modal } from "react-bootstrap";
-import "../MealBrowsing/FoodCategories.css"; 
+import "../MealBrowsing/FoodCategories.css";
 
 export default function UserSignUp() {
   const { register, handleSubmit, watch, errors } = useForm();
   const [toHome, setToHome] = useState();
+  const [message, setMessage] = useState();
   const [show, setShow] = useState(false);
   const password = useRef({});
   password.current = watch("password", "");
@@ -16,14 +17,20 @@ export default function UserSignUp() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
-    }).then((response) => {
-     
-      if (response.status === 200) {
-        setToHome(true);
-      } else if(response.status ===500){
-        handleShow();
-      }
-    });
+    })
+      .then((data) => {
+        if (data.status === 200) {
+          setToHome(true);
+        } else if (data.status === 400) {
+          data.json().then((res) => {
+            setMessage(res.error);
+            handleShow();
+          });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const handleClose = () => setShow(false);
@@ -107,35 +114,36 @@ export default function UserSignUp() {
               name="confirmPassword"
               placeholder="Confirm password"
               ref={register({
-                
-                validate: value => {
-                  return value === password.current || "Passwords do not match"
-                }
+                validate: (value) => {
+                  return value === password.current || "Passwords do not match";
+                },
               })}
               className="form-control"
               id="confirm-password"
               required="required"
             />
             {errors.confirmPassword && (
-              <small className="text-danger">{errors.confirmPassword.message}</small>
+              <small className="text-danger">
+                {errors.confirmPassword.message}
+              </small>
             )}
           </div>
           <input type="submit" className="btn btn-primary" />
         </form>
       </div>
       <>
-          <Modal show={show} onHide={handleClose}>
-            <Modal.Header closeButton>
-              <Modal.Title>Message</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>Username or E-mail already exists</Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={handleClose}>
-                Close
-          </Button>
-            </Modal.Footer>
-          </Modal>
-        </>
+        <Modal show={show} onHide={handleClose} message={message}>
+          <Modal.Header closeButton>
+            <Modal.Title>Message</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>{message}</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </>
     </div>
   );
 }
