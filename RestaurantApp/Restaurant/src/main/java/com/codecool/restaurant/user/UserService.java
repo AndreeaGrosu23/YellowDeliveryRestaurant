@@ -2,6 +2,7 @@ package com.codecool.restaurant.user;
 
 import com.codecool.restaurant.exception.NoDataFoundException;
 import com.codecool.restaurant.security.JwtTokenServices;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
+@AllArgsConstructor
 @Service
 public class UserService {
 
@@ -20,18 +22,11 @@ public class UserService {
 
     private final JwtTokenServices jwtTokenServices;
 
-    public UserService(UserRepository userRepository, JwtTokenServices jwtTokenServices){
-        this.userRepository = userRepository;
-        this.jwtTokenServices = jwtTokenServices;
-        passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
-
     // Persisting User with encoded password
     public void addUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
-
 
     public List<User> getAllUsers() {
         List<User> listUsers = userRepository.findAll();
@@ -47,7 +42,7 @@ public class UserService {
 
     @Transactional
     public void updateUserDetails(UserDetailsDto updatedUser, String userName) {
-        //throw exception if user not found
+        //getUserByUsername throws exception if user not found
         User user = getUserByUsername(userName);
 
         user.setFirstName(updatedUser.getFirstName());
