@@ -2,6 +2,7 @@ package com.codecool.restaurant.user;
 
 import com.codecool.restaurant.exception.NoDataFoundException;
 import com.codecool.restaurant.security.JwtTokenServices;
+import org.postgresql.util.PSQLException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,9 +28,12 @@ public class UserService {
     }
 
     // Persisting User with encoded password
-    public void addUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+    public void addUser(User user) throws PSQLException {
+
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            userRepository.save(user);
+
+
     }
 
     public List<User> getAllUsers() {

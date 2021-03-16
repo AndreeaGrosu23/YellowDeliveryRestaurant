@@ -3,6 +3,7 @@ package com.codecool.restaurant.user;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.postgresql.util.PSQLException;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
@@ -19,7 +20,7 @@ public class UserController {
 
     @PostMapping
     @ApiOperation(value = "Add a new user")
-    public void addUser(@Valid @RequestBody User user){
+    public void addUser(@Valid @RequestBody User user) throws PSQLException {
         userService.addUser(user);
     }
 
