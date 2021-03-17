@@ -8,6 +8,7 @@ import com.codecool.restaurant.shoppingCart.payload.ViewCart;
 import com.codecool.restaurant.user.User;
 import com.codecool.restaurant.user.UserService;
 import lombok.AllArgsConstructor;
+import org.reactivestreams.Publisher;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -105,4 +106,6 @@ public class ShoppingCartService {
     public void clearCart(User user) {
         shoppingCartRepository.deleteAllByUserId(user.getId());
     }
+
+
 }
