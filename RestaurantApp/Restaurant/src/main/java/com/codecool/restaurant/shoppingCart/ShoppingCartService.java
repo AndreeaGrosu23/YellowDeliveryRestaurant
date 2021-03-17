@@ -8,12 +8,10 @@ import com.codecool.restaurant.shoppingCart.payload.ViewCart;
 import com.codecool.restaurant.user.User;
 import com.codecool.restaurant.user.UserService;
 import lombok.AllArgsConstructor;
-import org.reactivestreams.Publisher;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 

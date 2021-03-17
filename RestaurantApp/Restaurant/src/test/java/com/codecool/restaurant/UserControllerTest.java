@@ -15,11 +15,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -32,7 +35,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UserControllerTest {
     private static final ObjectMapper om = new ObjectMapper();
 
-
     @Autowired
     private MockMvc mockMvc;
 
@@ -43,7 +45,7 @@ public class UserControllerTest {
     private User mockUser;
 
     @Test
-    public void saveEmptyUser() throws Exception {
+    public void testAddEmptyUser() throws Exception {
         String newUser = "{\"firstName\":\"\", \"lastName\":\"\", \"userName\":\"\" , \"emailAddress\":\"\", \"deliveryAddress\":\"\", \"phoneNumber\":\"\", \"password\":\"\"}";
 
         mockMvc.perform(post("/api/v1/user")
@@ -63,5 +65,49 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.errors", hasItem("Password must be minimum 4 characters")));
 
         verify(mockUserService, times(0)).addUser(mockUser);
+    }
+
+    @Test
+    public void testAddUser() throws Exception {
+        User user = new User("Andreea", "Grosu", "acgrosu", "ag@gmail.com", "", "", "password");
+
+        mockMvc.perform(post("/api/v1/user")
+                .content(om.writeValueAsString(user))
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @WithMockUser(username="admin", password="admin")
+    @Test
+    public void testGetUserById() throws Exception {
+
+        mockMvc.perform(get("/api/v1/user/1"))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        verify(mockUserService, times(1)).getUserById(1L);
+    }
+
+    @WithMockUser(username="acgrosu", password="1234")
+    @Test
+    public void testGetAllUsers() throws Exception {
+
+        mockMvc.perform(get("/api/v1/user/all-users"))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        verify(mockUserService, times(1)).getAllUsers();
+    }
+
+    @WithMockUser(username="acgrosu", password="1234")
+    @Test
+    public void testGetUserByUsername() throws Exception {
+
+        mockMvc.perform(get("/api/v1/user"))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        verify(mockUserService, times(1)).getUserByUsername("acgrosu");
     }
 }
