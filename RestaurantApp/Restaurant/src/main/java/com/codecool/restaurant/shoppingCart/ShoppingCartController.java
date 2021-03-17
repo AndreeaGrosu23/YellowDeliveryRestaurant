@@ -38,7 +38,6 @@ public class ShoppingCartController {
             shoppingCartService.deleteItem(meal);
             return ResponseEntity.ok(new GeneralResponse(true, "Meal removed"));
         }
-
     }
 
     @GetMapping("/order-details")
