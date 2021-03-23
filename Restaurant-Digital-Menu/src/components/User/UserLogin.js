@@ -38,6 +38,7 @@ export default function UserLogin() {
       if (error.message === "Request failed with status code 403") {
         setModalMessage("Username or Password is incorrect");
         handleShow();
+        console.log(error);
       } else {
         history.push({ pathname: "/error", state: { detail: error.message } });
       }
