@@ -1,4 +1,4 @@
-package com.codecool.restaurant;
+package com.codecool.restaurant.unitTests;
 
 import com.codecool.restaurant.exception.NoDataFoundException;
 import com.codecool.restaurant.order.UserOrderRepository;

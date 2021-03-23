@@ -1,4 +1,4 @@
-package com.codecool.restaurant;
+package com.codecool.restaurant.integrationTests;
 
 import com.codecool.restaurant.user.User;
 import com.codecool.restaurant.user.UserService;
