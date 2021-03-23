@@ -12,7 +12,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,4 +104,6 @@ public class ShoppingCartService {
     public void clearCart(User user) {
         shoppingCartRepository.deleteAllByUserId(user.getId());
     }
+
+
 }

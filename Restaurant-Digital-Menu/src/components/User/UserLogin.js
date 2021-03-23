@@ -38,6 +38,7 @@ export default function UserLogin() {
       if (error.message === "Request failed with status code 403") {
         setModalMessage("Username or Password is incorrect");
         handleShow();
+        console.log(error);
       } else {
         history.push({ pathname: "/error", state: { detail: error.message } });
       }
@@ -82,7 +83,7 @@ export default function UserLogin() {
               placeholder="username"
               ref={register({
                 required: { message: "This field is mandatory", value: true },
-                minLength: { message: "Minim 4 characters", value: 4 },
+                minLength: { message: "Minim 1 characters", value: 1 },
               })}
               type="text"
               className="form-control"
